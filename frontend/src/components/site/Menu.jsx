@@ -41,7 +41,7 @@ export default function MenuSection() {
           </div>
           <div className="col-span-12 lg:col-span-5 flex items-end">
             <p className="text-espresso/70 leading-relaxed">
-              Ten categories. ~80 handcrafted items. Prices in INR — inclusive of taxes.
+              Ten categories. ~75 handcrafted items. Prices in INR — inclusive of taxes.
               Tap any category or type to find your next favourite.
             </p>
           </div>

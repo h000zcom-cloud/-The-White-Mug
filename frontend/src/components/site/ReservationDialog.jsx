@@ -108,7 +108,6 @@ export default function ReservationDialog({ open, onClose }) {
                     onChange={set("name")}
                     placeholder="Your full name"
                     className="mt-1 w-full h-11 px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]"
-                    required
                   />
                 </div>
                 <div className="col-span-2">
@@ -120,7 +119,6 @@ export default function ReservationDialog({ open, onClose }) {
                     placeholder="+91 98XXXXXXXX"
                     inputMode="tel"
                     className="mt-1 w-full h-11 px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]"
-                    required
                   />
                 </div>
                 <div>
