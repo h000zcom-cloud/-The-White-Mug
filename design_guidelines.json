@@ -1,0 +1,71 @@
+{
+  "project_name": "The White Mug - Cafe",
+  "theme": "Light",
+  "aesthetic": "Warm Minimalist Luxe, Cozy Coffeehouse, High-End Specialty Cafe",
+  "typography": {
+    "headings": {
+      "fontFamily": "Playfair Display, serif",
+      "weights": ["400", "500", "700"],
+      "usage": "H1, H2, H3, Editorial quotes, and major section titles. Apply tight letter spacing (tracking-tight)."
+    },
+    "body": {
+      "fontFamily": "Plus Jakarta Sans, sans-serif",
+      "weights": ["300", "400", "500", "600"],
+      "usage": "Paragraphs, labels, menu items, and UI elements. Ensure high legibility with relaxed line-height (leading-relaxed)."
+    }
+  },
+  "colors": {
+    "primaryBackground": "#FAF8F5",
+    "primaryText": "#1F1614",
+    "secondaryText": "#2D1F1B",
+    "secondaryAccent": "#C89D66",
+    "warmCaramel": "#D4A359",
+    "warmCardBackground": "#FFFFFF",
+    "cardBorder": "#F3EDE6",
+    "mutedNeutral": "#6E655F",
+    "greenTag": "#2D7A4D"
+  },
+  "visual_enhancers": {
+    "glassmorphism": "Use backdrop-blur-xl bg-white/70 with a subtle border (border-white/40) for sticky navs and floating elements.",
+    "motion": "Implement Framer Motion for scroll reveals, staggered entry animations, and a signature kinetic hero with masked line-by-line reveal.",
+    "smooth_scrolling": "MANDATORY: Integrate Lenis for smooth momentum scrolling across the entire site.",
+    "shadows": "Use soft, ambient layered shadows. Avoid harsh drop shadows. Use tailwind's shadow-sm or custom ambient shadows.",
+    "borders": "Delicate 1px borders (#F3EDE6) to define cards and menu items.",
+    "imagery_treatment": "Spotlight framing, clipped masks for product photos, and subtle parallax effects on scroll. Do not use generic full-width blanket overlays—use gradients or soft tints to preserve image detail."
+  },
+  "layout_strategy": {
+    "grid": "Use asymmetrical 'Bento' grids and 'The Swiss Grid' for layout tension. Avoid standard symmetric 50/50 splits.",
+    "spacing": "Generous spacing. Use p-12, p-16, py-24, py-32 for section padding to give an airy, luxurious feel.",
+    "mobile_first": "Ensure responsive behavior with a mobile drawer nav and optimized grid-cols-1 for small screens."
+  },
+  "components_path": "/app/frontend/src/components/ui",
+  "image_urls": {
+    "hero_interior": "https://images.unsplash.com/photo-1511081692775-05d0f180a065?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNTl8MHwxfHNlYXJjaHw0fHxoaWdoJTIwZW5kJTIwY2FmZSUyMGludGVyaW9yJTIwd2FybSUyMGFlc3RoZXRpY3xlbnwwfHx8fDE3ODU2MDk3MzZ8MA&ixlib=rb-4.1.0&q=85",
+    "spanish_latte": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNTl8MHwxfHNlYXJjaHwyfHxzcGFuaXNoJTIwbGF0dGUlMjBpY2VkJTIwY29mZmVlJTIwY2FmZXxlbnwwfHx8fDE3ODU2MDk3NDh8MA&ixlib=rb-4.1.0&q=85",
+    "sourdough_toast": "https://images.unsplash.com/photo-1604634077134-6f774f610f47?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzN8MHwxfHNlYXJjaHwzfHxnb3VybWV0JTIwc291cmRvdWdoJTIwYXZvY2FkbyUyMHRvYXN0JTIwY3JvaXNzYW50JTIwcGFzdHJ5fGVufDB8fHx8MTc4NTYwOTczNXww&ixlib=rb-4.1.0&q=85",
+    "croissant": "https://images.unsplash.com/photo-1763207291707-e2cf471ed72b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHwyfHxmcmVzaCUyMGNyb2lzc2FudCUyMHBhc3RyeSUyMGNhZmV8ZW58MHx8fHwxNzg1NjA5NzQ4fDA&ixlib=rb-4.1.0&q=85",
+    "barista_pour_over": "https://images.unsplash.com/photo-1718791985055-e1b06ef5961d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxNzV8MHwxfHNlYXJjaHwyfHxhcnRpc2FuYWwlMjBzcGVjaWFsdHklMjBjb2ZmZWUlMjBwb3VyJTIwb3ZlciUyMGJhcmlzdGF8ZW58MHx8fHwxNzg1NjA5NzM2fDA&ixlib=rb-4.1.0&q=85"
+  },
+  "instructions_to_main_agent": [
+    "1. Setup Lenis for smooth scrolling and Framer Motion for animations.",
+    "2. Implement a sticky glassmorphism navigation bar with a Pure Veg badge and 'Reserve Table' CTA.",
+    "3. Build the Hero Section with a masked line-by-line reveal using Framer Motion, and include the 3 images (Latte, Toast, Croissant) in a creative clipped/overlapping gallery layout.",
+    "4. Create the 'Our Story & Craft' section with numbered editorial manifesto chapters and the barista image.",
+    "5. Develop the Interactive Digital Menu with 10 category tabs, a live search bar, and mock data for ~80 items. Use Shadcn Tabs and Inputs.",
+    "6. Add a slow editorial marquee (e.g., 'ARTISANAL COFFEE • FRESH SOURDOUGH • 100% PURE VEG') using react-fast-marquee.",
+    "7. Include a static Google Reviews slider showcasing 3 high-quality testimonials.",
+    "8. Build a Location & Contact Widget with an embedded Google Map, timings, and a 'Table Reservation' dialog. The dialog must compose a WhatsApp deep link (wa.me/919561166185).",
+    "9. Ensure all interactive and key informational elements have 'data-testid' attributes.",
+    "10. Connect the frontend with the FastAPI backend for the menu data if applicable, or build robust mock data in the frontend if backend integration is deferred.",
+    "11. Use Playfair Display for headings and Plus Jakarta Sans for body text. Add the Google Fonts import to index.html or index.css."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Avoid generic, 'on distribution' AI outputs. Create depth through layered design and z-index hierarchy.",
+    "DO NOT apply universal transitions (transition: all). Add transitions to specific interactive elements.",
+    "DO NOT center align the app container (.App { text-align: center; }).",
+    "Every interaction needs micro-animations: hover states, transitions, entrance animations.",
+    "Use 2-3x more spacing than usual for a luxurious, uncluttered feel.",
+    "Ensure all text meets APCA/WCAG contrast standards.",
+    "Never use purely transparent backgrounds for dropdowns or floating headers."
+  ]
+}
