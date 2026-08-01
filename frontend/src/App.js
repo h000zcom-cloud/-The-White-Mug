@@ -1,56 +1,39 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-import { HOME } from "@/constants/testIds";
+import useLenis from "@/hooks/useLenis";
+import Nav from "@/components/site/Nav";
+import Hero from "@/components/site/Hero";
+import EditorialMarquee from "@/components/site/Marquee";
+import Story from "@/components/site/Story";
+import SignatureBrews from "@/components/site/SignatureBrews";
+import MenuSection from "@/components/site/Menu";
+import Ambiance from "@/components/site/Ambiance";
+import Reviews from "@/components/site/Reviews";
+import Location from "@/components/site/Location";
+import Footer from "@/components/site/Footer";
+import ReservationDialog from "@/components/site/ReservationDialog";
+import { Toaster } from "@/components/ui/sonner";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+export default function App() {
+  const [reserveOpen, setReserveOpen] = useState(false);
+  useLenis();
 
   return (
-    <div>
-      <header className="App-header">
-        <a
-          data-testid={HOME.emergentLink}
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
-
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+    <div className="App relative min-h-screen bg-cream text-espresso grain">
+      <Nav onReserveClick={() => setReserveOpen(true)} />
+      <main>
+        <Hero />
+        <EditorialMarquee />
+        <Story />
+        <SignatureBrews />
+        <MenuSection />
+        <Ambiance />
+        <Reviews />
+        <Location onReserveClick={() => setReserveOpen(true)} />
+      </main>
+      <Footer />
+      <ReservationDialog open={reserveOpen} onClose={() => setReserveOpen(false)} />
+      <Toaster />
     </div>
   );
 }
-
-export default App;
