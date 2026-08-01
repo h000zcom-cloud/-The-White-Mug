@@ -1,6 +1,9 @@
 /**
  * Full menu for The White Mug – Cafe.
  * Prices in INR. Categories match the digital menu spec.
+ * `bestseller: true`  → shown in Chef Specials + "Bestsellers" dietary filter.
+ * `specialty:  true`  → shown in "Specialty Brews" dietary filter (all specialty coffees + manual brews).
+ * All items are pure vegetarian (kitchen is 100% veg).
  */
 
 export const CATEGORIES = [
@@ -16,34 +19,48 @@ export const CATEGORIES = [
   { id: "dessert", label: "Desserts", tag: "🍰" },
 ];
 
-/* Helper to build items compactly */
+/**
+ * IG-style circular category "story highlight" chips shown above the menu.
+ * Tapping a chip → sets the corresponding menu tab and scrolls to the menu.
+ */
+export const CHIP_CATEGORIES = [
+  { id: "specialty", label: "Specialty Coffee", emoji: "☕", image: "spanish_latte" },
+  { id: "manual", label: "Single Origin", emoji: "🧪", image: "pour_over" },
+  { id: "toast", label: "Sourdough Toast", emoji: "🥑", image: "sourdough_toast" },
+  { id: "croissant", label: "Croissants", emoji: "🥐", image: "croissant" },
+  { id: "pizza", label: "Pizzas", emoji: "🍕", image: "pizza" },
+  { id: "cold", label: "Frappes & Coolers", emoji: "🧊", image: "iced_latte" },
+  { id: "dessert", label: "Fresh Desserts", emoji: "🍰", image: "cheesecake" },
+];
+
 const item = (name, price, desc, cat, opts = {}) => ({
   name,
   price,
   desc,
   category: cat,
+  pureVeg: true,
   ...opts,
 });
 
 export const MENU = [
   // A · Warm Specialty Coffees
-  item("Espresso", 179, "A bold, concentrated shot of pure coffee essence.", "specialty", { image: "spanish_latte" }),
-  item("Americano", 199, "Espresso mellowed with hot water for a smooth, long sip.", "specialty"),
-  item("Vienna Coffee", 219, "Smooth coffee topped with a light layer of cream for a velvety finish.", "specialty"),
-  item("Cortado", 219, "An espresso cut with an equal amount of warm steamed milk.", "specialty"),
-  item("Bombon", 219, "Sweet condensed milk meets espresso for creamy indulgence.", "specialty"),
-  item("Flat White", 219, "Velvety steamed milk atop a strong espresso base.", "specialty"),
-  item("Cappuccino", 259, "Equal parts espresso, steamed milk and foamed milk. A classic.", "specialty", { image: "barista_hands" }),
-  item("Latte", 259, "Smooth espresso swirled with plenty of steamed milk.", "specialty"),
-  item("Spanish Latte", 259, "Smooth espresso swirled with steamed and condensed milk.", "specialty", { special: true, image: "spanish_latte" }),
+  item("Espresso", 179, "A bold, concentrated shot of pure coffee essence.", "specialty", { specialty: true }),
+  item("Americano", 199, "Espresso mellowed with hot water for a smooth, long sip.", "specialty", { specialty: true }),
+  item("Vienna Coffee", 219, "Smooth coffee topped with a light layer of cream for a velvety finish.", "specialty", { specialty: true }),
+  item("Cortado", 219, "An espresso cut with an equal amount of warm steamed milk.", "specialty", { specialty: true }),
+  item("Bombon", 219, "Sweet condensed milk meets espresso for creamy indulgence.", "specialty", { specialty: true }),
+  item("Flat White", 219, "Velvety steamed milk atop a strong espresso base.", "specialty", { specialty: true }),
+  item("Cappuccino", 259, "Equal parts espresso, steamed milk and foamed milk. A classic.", "specialty", { specialty: true, image: "barista_hands" }),
+  item("Latte", 259, "Smooth espresso swirled with plenty of steamed milk.", "specialty", { specialty: true }),
+  item("Spanish Latte", 259, "Smooth espresso swirled with steamed and condensed milk.", "specialty", { specialty: true, special: true, bestseller: true, image: "spanish_latte" }),
   item("Hot Chocolate", 289, "Creamy cocoa delight for non-coffee days.", "specialty", { image: "hot_chocolate" }),
-  item("Café Mocha", 299, "Rich cocoa, steamed milk and coffee — the ultimate trio.", "specialty"),
+  item("Café Mocha", 299, "Rich cocoa, steamed milk and coffee — the ultimate trio.", "specialty", { specialty: true }),
 
   // B · Single Origin Manual Brews
-  item("French Press", 329, "Robust and full-bodied — unfiltered and comforting with every sip.", "manual", { image: "pour_over" }),
-  item("Aeropress", 349, "Smooth, bold brew with a rich mouthfeel — brewed fast, served fresh.", "manual"),
-  item("Chemex", 359, "Clean, crisp cup with delicate clarity — ideal for tasting subtle origin notes.", "manual", { image: "pour_over" }),
-  item("V60 Pour Over", 359, "Light, smooth and balanced — brings out clear, gentle flavors.", "manual"),
+  item("French Press", 329, "Robust and full-bodied — unfiltered and comforting with every sip.", "manual", { specialty: true, image: "pour_over" }),
+  item("Aeropress", 349, "Smooth, bold brew with a rich mouthfeel — brewed fast, served fresh.", "manual", { specialty: true }),
+  item("Chemex", 359, "Clean, crisp cup with delicate clarity — ideal for tasting subtle origin notes.", "manual", { specialty: true, bestseller: true, image: "pour_over" }),
+  item("V60 Pour Over", 359, "Light, smooth and balanced — brings out clear, gentle flavors.", "manual", { specialty: true }),
 
   // C · Iced Coffees & Signature Frappes
   item("Iced Americano", 120, "Chilled espresso poured over ice and cold water.", "cold"),
@@ -54,7 +71,7 @@ export const MENU = [
   item("Caramel / Hazelnut Frappe", 170, "Blended cold coffee infused with hazelnut or caramel glaze.", "cold"),
   item("Oreo / KitKat Frappe", 180, "Blended coffee with crunchy cookie or chocolate bits.", "cold"),
   item("Brownie Frappe", 190, "Rich cold coffee blended with fresh chocolate brownie chunks.", "cold"),
-  item("TWM Special Frappe", 200, "Our signature house frappe blend.", "cold", { special: true, image: "frappe" }),
+  item("TWM Special Frappe", 200, "Our signature house frappe blend.", "cold", { special: true, bestseller: true, image: "frappe" }),
 
   // D · Coolers & Thick Shakes
   item("Virgin Mojito", 130, "Refreshing mint, lime and sparkling soda.", "coolers", { image: "mojito" }),
@@ -76,9 +93,9 @@ export const MENU = [
   // E · Open Toast (Sourdough) & Sandwiches
   item("Masala Corn Toast", 289, "Topped with cheese, corn, chilli and baked in oven.", "toast", { image: "sourdough_toast" }),
   item("Cheese Bruschetta", 289, "Light zesty topping with mushroom, tomato, onion, basil and cheese.", "toast"),
-  item("Tuscan Toast", 289, "Baked with pesto, spinach, tomato, roasted garlic and mozzarella.", "toast"),
+  item("Tuscan Toast", 289, "Baked with pesto, spinach, tomato, roasted garlic and mozzarella.", "toast", { bestseller: true, image: "sourdough_toast" }),
   item("BBQ Paneer Supreme", 289, "Paneer and veggies tossed in a smoky BBQ sauce on crisp toast.", "toast"),
-  item("Avocado Toast", 399, "Whole avocado with light seasoning on crisp sourdough toast.", "toast", { special: true, image: "sourdough_toast" }),
+  item("Avocado Toast", 399, "Whole avocado with light seasoning on crisp sourdough toast.", "toast", { special: true, bestseller: true, image: "sourdough_toast" }),
   item("Classic Coleslaw Crunch Sandwich", 299, "Light, crunchy and creamy with a classic coleslaw finish.", "toast"),
   item("Spinach Corn Supreme Sandwich", 299, "Rich, creamy and balanced with spinach, corn and melted cheese.", "toast"),
   item("BBQ Paneer Cheese Melt", 329, "Green veggies and paneer layered with a smoky, sweet BBQ glaze.", "toast", { image: "sandwich" }),
@@ -114,7 +131,7 @@ export const MENU = [
   item("Chocolate Brownie", 90, "Rich fudgy chocolate cake slice.", "dessert", { image: "brownie" }),
   item("Brownie with Ice Cream", 130, "Warm brownie served with a vanilla ice cream scoop.", "dessert"),
   item("Sizzling Brownie", 160, "Served hot on a sizzler plate with chocolate fudge sauce.", "dessert", { image: "brownie" }),
-  item("Blueberry Cheesecake", 180, "Creamy cheesecake topped with sweet blueberry compote.", "dessert", { image: "cheesecake" }),
+  item("Blueberry Cheesecake", 180, "Creamy cheesecake topped with sweet blueberry compote.", "dessert", { bestseller: true, image: "cheesecake" }),
   item("Affogato", 140, "Scoop of vanilla ice cream topped with a hot espresso shot.", "dessert"),
   item("Chocolate Mousse", 120, "Silky dark chocolate mousse cup.", "dessert"),
 ];
@@ -134,19 +151,51 @@ export const REVIEWS = [
   {
     name: "Adventurous Gemini",
     rating: 5,
-    text: "Best Spanish Latte and Hot Chocolate in Nashik! Clean, cozy, and amazing ambiance.",
+    text: "Best Spanish Latte and Hot Chocolate in Nashik! Super clean, cozy, and aesthetic.",
     initial: "A",
   },
   {
     name: "Sanika Unavane",
     rating: 5,
-    text: "Loved the brunch here! Amazing coffee, unique food options, super clean and hygienic.",
+    text: "Loved the brunch here! Amazing single-origin coffee and unique sourdough options.",
     initial: "S",
   },
   {
     name: "Sachin Bairagi",
-    rating: 4.5,
-    text: "Exotic beverage collection and a beautiful history of coffee presentation. A must-visit third space.",
+    rating: 5,
+    text: "Wonderful third space to catch up or work. Great vibe and attentive staff.",
     initial: "S",
   },
 ];
+
+/**
+ * "Find Your Perfect Brew" — decision tree mapping user answers to a menu item name.
+ * Keys are joined by "|" — e.g. "warm|strong|black" → "Espresso".
+ * If a combination isn't listed, we fall back to Spanish Latte.
+ */
+export const BREW_QUIZ_MAP = {
+  // Warm + Strong
+  "warm|strong|dairy": "Cappuccino",
+  "warm|strong|plant": "Flat White",
+  "warm|strong|black": "Chemex",
+  // Warm + Sweet
+  "warm|sweet|dairy": "Spanish Latte",
+  "warm|sweet|plant": "Latte",
+  "warm|sweet|black": "Vienna Coffee",
+  // Warm + Creamy
+  "warm|creamy|dairy": "Café Mocha",
+  "warm|creamy|plant": "Hot Chocolate",
+  "warm|creamy|black": "French Press",
+  // Iced + Strong
+  "iced|strong|dairy": "Iced Latte",
+  "iced|strong|plant": "Iced Mocha",
+  "iced|strong|black": "Iced Americano",
+  // Iced + Sweet
+  "iced|sweet|dairy": "Classic Frappe",
+  "iced|sweet|plant": "Flavoured Iced Latte",
+  "iced|sweet|black": "Peach / Lemon Iced Tea",
+  // Iced + Creamy
+  "iced|creamy|dairy": "TWM Special Frappe",
+  "iced|creamy|plant": "Brownie Frappe",
+  "iced|creamy|black": "Virgin Mojito",
+};

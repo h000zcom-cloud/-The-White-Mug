@@ -8,9 +8,9 @@ const LINKS = [
   { id: "top", label: "Home" },
   { id: "story", label: "Our Story" },
   { id: "menu", label: "Menu" },
-  { id: "signature", label: "Signature Brews" },
+  { id: "quiz", label: "Find My Brew" },
   { id: "reviews", label: "Reviews" },
-  { id: "location", label: "Location & Contact" },
+  { id: "location", label: "Location" },
 ];
 
 export default function Nav({ onReserveClick }) {
@@ -18,7 +18,7 @@ export default function Nav({ onReserveClick }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -38,30 +38,30 @@ export default function Nav({ onReserveClick }) {
         transition={{ duration: 0.9, ease: [0.2, 0.7, 0.2, 1] }}
         className={`fixed top-0 inset-x-0 z-50 transition-[background,border,box-shadow] duration-500 ${
           scrolled
-            ? "bg-cream/80 backdrop-blur-xl border-b border-borderwarm shadow-[0_10px_30px_-25px_rgba(31,22,20,0.25)]"
+            ? "bg-cream/85 backdrop-blur-xl border-b border-borderwarm shadow-[0_10px_30px_-25px_rgba(31,22,20,0.25)]"
             : "bg-transparent border-b border-transparent"
         }`}
       >
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-10 flex items-center justify-between h-[72px]">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between h-[64px] lg:h-[72px]">
           {/* Logo */}
           <button
             data-testid={TID.navLogo}
             onClick={() => go("top")}
-            className="flex items-center gap-3 group"
+            className="flex items-center gap-2.5 group"
           >
             <MugIcon />
             <div className="leading-none text-left">
-              <div className="font-serif-display text-espresso text-[19px] tracking-tight">
+              <div className="font-serif-display text-espresso text-[15px] sm:text-[19px] tracking-tight">
                 THE WHITE MUG
               </div>
-              <div className="text-[10px] uppercase tracking-[0.4em] text-mutedwarm mt-1">
+              <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.36em] sm:tracking-[0.4em] text-mutedwarm mt-1">
                 cafe · nashik
               </div>
             </div>
           </button>
 
           {/* Center links */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-7">
             {LINKS.map((l) => (
               <button
                 key={l.id}
@@ -76,8 +76,11 @@ export default function Nav({ onReserveClick }) {
           </nav>
 
           {/* Right cluster */}
-          <div className="flex items-center gap-3">
-            <span className="chip hidden md:inline-flex" data-testid="nav-veg-badge">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span
+              className="chip hidden sm:inline-flex !py-1.5 !px-3 !text-[11.5px]"
+              data-testid="nav-veg-badge"
+            >
               <Leaf className="w-3.5 h-3.5 text-vegetal" strokeWidth={2.4} />
               <span className="text-vegetal font-semibold">Pure Veg</span>
             </span>
@@ -85,7 +88,7 @@ export default function Nav({ onReserveClick }) {
             <a
               data-testid={TID.navCall}
               href="tel:+919561166185"
-              className="hidden md:inline-flex items-center gap-2 h-10 px-4 rounded-full border border-borderwarm text-espresso hover:bg-white transition-colors text-[13px] font-medium"
+              className="hidden sm:inline-flex items-center gap-2 h-10 min-h-[44px] px-4 rounded-full border border-borderwarm text-espresso hover:bg-white transition-colors text-[13px] font-medium"
             >
               <Phone className="w-3.5 h-3.5" />
               Call
@@ -94,7 +97,7 @@ export default function Nav({ onReserveClick }) {
             <button
               data-testid={TID.navReserve}
               onClick={onReserveClick}
-              className="btn-glow inline-flex items-center gap-2 h-10 px-5 rounded-full bg-espresso text-cream text-[13px] font-medium hover:bg-espresso2 transition-colors"
+              className="btn-glow hidden lg:inline-flex items-center gap-2 h-10 min-h-[44px] px-5 rounded-full bg-espresso text-cream text-[13px] font-medium hover:bg-espresso2 transition-colors"
             >
               Reserve Table
               <span className="opacity-70">↗</span>
@@ -103,7 +106,7 @@ export default function Nav({ onReserveClick }) {
             <button
               data-testid={TID.navMobileToggle}
               onClick={() => setOpen((v) => !v)}
-              className="lg:hidden w-10 h-10 grid place-items-center rounded-full border border-borderwarm bg-white/60 backdrop-blur-md"
+              className="lg:hidden w-11 h-11 min-h-[44px] grid place-items-center rounded-full border border-borderwarm bg-white/70 backdrop-blur-md"
               aria-label="Toggle menu"
             >
               {open ? <X className="w-4 h-4" /> : <MenuIcon className="w-4 h-4" />}
@@ -118,7 +121,7 @@ export default function Nav({ onReserveClick }) {
         initial={false}
         animate={open ? { opacity: 1, pointerEvents: "auto" } : { opacity: 0, pointerEvents: "none" }}
         transition={{ duration: 0.3 }}
-        className="lg:hidden fixed inset-0 z-40 bg-cream/95 backdrop-blur-xl pt-24 px-8"
+        className="lg:hidden fixed inset-0 z-40 bg-cream/95 backdrop-blur-xl pt-20 px-6 overflow-y-auto pb-32"
       >
         <div className="flex flex-col gap-1">
           {LINKS.map((l, i) => (
@@ -133,15 +136,24 @@ export default function Nav({ onReserveClick }) {
               {l.label}
             </motion.button>
           ))}
-          <div className="mt-8 flex items-center gap-3">
+          <motion.button
+            onClick={() => {
+              setOpen(false);
+              onReserveClick?.();
+            }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={open ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+            transition={{ delay: 0.35, duration: 0.4 }}
+            className="mt-6 h-14 min-h-[48px] w-full rounded-full bg-espresso text-cream font-medium"
+          >
+            Reserve a Table →
+          </motion.button>
+          <div className="mt-6 flex items-center gap-2 flex-wrap">
             <span className="chip">
               <Leaf className="w-3.5 h-3.5 text-vegetal" strokeWidth={2.4} />
               <span className="text-vegetal font-semibold">Pure Veg</span>
             </span>
-            <a
-              href="tel:+919561166185"
-              className="chip"
-            >
+            <a href="tel:+919561166185" className="chip">
               <Phone className="w-3.5 h-3.5" /> +91 95611 66185
             </a>
           </div>
@@ -153,7 +165,7 @@ export default function Nav({ onReserveClick }) {
 
 function MugIcon() {
   return (
-    <svg width="34" height="34" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+    <svg width="32" height="32" viewBox="0 0 40 40" fill="none" aria-hidden="true" className="sm:w-[34px] sm:h-[34px]">
       <rect x="1" y="1" width="38" height="38" rx="12" fill="#FFFFFF" stroke="#EDE4D9" />
       <path
         d="M12 15h13a2 2 0 0 1 2 2v7a5 5 0 0 1-5 5h-7a5 5 0 0 1-5-5v-7a2 2 0 0 1 2-2Z"

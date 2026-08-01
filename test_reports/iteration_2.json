@@ -1,0 +1,36 @@
+{
+  "summary": "Iteration 2 – Mobile-first refactor. Backend pytest 8/8 green (health/manifest now 18 images incl. cafe_patio & cafe_work_corner, both served as image/png >50KB). Frontend Playwright coverage on 390x844 + 1440x900: mobile dock, chips (7), dietary filters + autocomplete, menu Reserve prefill (Spanish Latte), Quiz flow (Spanish Latte match + reset), Chef Specials (4 cards, reserve prefill 'Interested in trying: <name>'), Reviews (Google/4.6/460+ visible, next/prev), Location (live-status 'Closed · Opens 9:30 AM' at test time, navigate href correct, tel href correct), Reservation dialog (dock opens, empty-submit shows reserve-error and no window.open, valid submit produces wa.me/919561166185?text=... containing 'Please confirm my table'), ESC closes dialog, no horiz scroll, no broken images, no console/page errors. Desktop nav shows all 6 links + Reserve; mobile dock hidden. Two minor issues found — see below.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Location.jsx (Follow Instagram tile)", "issue": "data-testid is 'location-instagram-link' (from TID.locationInsta) but the review request and test spec require 'one-tap-follow' to match dock/link scheme. href value itself is correct (https://www.instagram.com/thewhitemugcafe).", "selector": "[data-testid=\"one-tap-follow\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Menu → diet-brew filter", "issue": "Selecting 'diet-brew' returns 14 menu items (specialty=true count in /app/frontend/src/data/menu.js). Spec expects >=15 items across Specialty Coffees + Manual Brews. Add at least 1 more specialty-flagged item OR relax spec.", "affected_selectors": ["[data-testid=\"diet-brew\"]", "[data-testid^=\"menu-item-\"]"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Rename Location Instagram link testid from 'location-instagram-link' to 'one-tap-follow' (update /app/frontend/src/lib/testIds.js: locationInsta -> 'one-tap-follow', or change the JSX to hard-code data-testid=\"one-tap-follow\").",
+    "Add at least one more menu item with specialty:true in /app/frontend/src/data/menu.js so diet-brew filter yields >=15 (currently 14). Candidates: any additional Manual Brew (e.g. Aeropress, Syphon) or Specialty Coffee variant."
+  ],
+  "critical_code_review_comments": [
+    "TID.locationInsta constant diverges from the requested 'one-tap-*' naming used for the other two tiles (navigate/call) hard-coded inline — inconsistent testid strategy; either move all three into TID or hard-code all three.",
+    "Data drift: brief mentions 'Bestsellers … Spanish Latte, Chemex, TWM Special Frappe, Tuscan Toast, Avocado Toast, Blueberry Cheesecake — total 6' — that matches, but specialty=true only 14 vs. brief 'should be >= 15'. Consider explicit unit/constant to keep spec + data in sync.",
+    "Reservation submit relies on JS-only validation now (HTML5 required removed as noted). Good — matches spec. Ensure future refactors keep <p data-testid='reserve-error'> path."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py (extended EXPECTED_SLUGS to 18, bumped health/manifest counts, added test_new_ambiance_images_served for cafe_patio & cafe_work_corner >50KB)"
+  ],
+  "success_rate": {"backend": "100% (8/8 pytest)", "frontend": "~92% (2 minor spec deviations of ~26 checks)"},
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend 18 images all served. When testing Menu 'diet-brew', the count comes from items with specialty:true — currently 14. When testing quiz-reset after result appears, allow ~700ms before asserting step-1 buttons visible; quiz-opt-temp-warm becomes visible after transition. When asserting wa.me URL text, url-decode first — text uses plain 'Please confirm my table. Thank you!' with newlines, and includes 'Special requests:' only if a menu item was prefilled and additional notes were kept. The Instagram tile currently has data-testid='location-instagram-link', not 'one-tap-follow'. All other testids match the spec.",
+  "rca of the issue": "1) Instagram testid mismatch — Location.jsx uses {TID.locationInsta} which resolves to 'location-instagram-link' while sibling anchors use inline 'one-tap-navigate' / 'one-tap-call'. Fix in /app/frontend/src/lib/testIds.js line 45 OR replace JSX prop. 2) diet-brew count 14 < 15 — only 14 rows in /app/frontend/src/data/menu.js carry specialty:true. Add one more (e.g. an Aeropress or Syphon manual brew) with specialty:true to reach the spec's >=15."
+}

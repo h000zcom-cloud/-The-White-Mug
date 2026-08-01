@@ -14,18 +14,18 @@ export default function Footer() {
   return (
     <footer
       data-testid={TID.footer}
-      className="relative bg-espresso text-cream pt-20 pb-10 overflow-hidden"
+      className="relative bg-espresso text-cream pt-14 sm:pt-20 pb-8 sm:pb-10 overflow-hidden"
     >
       <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-caramel/10 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -left-16 w-96 h-96 rounded-full bg-caramel/10 blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10">
-        <div className="grid grid-cols-12 gap-10">
+      <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="grid grid-cols-12 gap-8 lg:gap-10">
           <div className="col-span-12 lg:col-span-6">
-            <div className="font-serif-display text-[11vw] sm:text-7xl lg:text-[104px] leading-[0.95] tracking-[-0.03em]">
+            <div className="font-serif-display text-[15vw] leading-[0.95] sm:text-7xl lg:text-[104px] tracking-[-0.03em]">
               The White Mug<span className="text-caramel">.</span>
             </div>
-            <p className="mt-6 text-cream/70 text-[15px] leading-relaxed max-w-[520px]">
+            <p className="mt-4 sm:mt-6 text-cream/70 text-[14px] sm:text-[15px] leading-relaxed max-w-[520px]">
               A specialty coffee house and pure vegetarian cafe in Mahatma Nagar, Nashik. Open every
               day 9:30 AM – 11:00 PM.
             </p>

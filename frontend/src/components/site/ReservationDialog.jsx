@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, MessageCircle } from "lucide-react";
+import { X, MessageCircle, Sparkles } from "lucide-react";
 import { TID } from "@/lib/testIds";
 
 const PHONE = "919561166185"; // wa.me format (no +)
 
-export default function ReservationDialog({ open, onClose }) {
+export default function ReservationDialog({ open, onClose, prefillItem }) {
   const today = new Date().toISOString().split("T")[0];
   const [form, setForm] = useState({
     name: "",
@@ -13,8 +13,19 @@ export default function ReservationDialog({ open, onClose }) {
     date: today,
     time: "19:00",
     guests: "2",
+    notes: "",
   });
   const [error, setError] = useState("");
+
+  // When opened with a menu item, seed the "Special Requests" field
+  useEffect(() => {
+    if (open) {
+      setForm((f) => ({
+        ...f,
+        notes: prefillItem ? `Interested in trying: ${prefillItem}` : f.notes,
+      }));
+    }
+  }, [open, prefillItem]);
 
   useEffect(() => {
     if (!open) return;
@@ -22,7 +33,6 @@ export default function ReservationDialog({ open, onClose }) {
       if (e.key === "Escape") onClose?.();
     };
     document.addEventListener("keydown", onKey);
-    // Lock body scroll
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
@@ -44,16 +54,18 @@ export default function ReservationDialog({ open, onClose }) {
       return;
     }
     setError("");
-    const msg = encodeURIComponent(
-      `Hi The White Mug! I'd like to reserve a table.\n\n` +
-        `Name: ${form.name}\n` +
-        `Phone: ${form.phone}\n` +
-        `Date: ${form.date}\n` +
-        `Time: ${form.time}\n` +
-        `Guests: ${form.guests}\n\n` +
-        `Please confirm my table. Thank you!`
-    );
-    const url = `https://wa.me/${PHONE}?text=${msg}`;
+    const lines = [
+      `Hi The White Mug team, I'd like to reserve a table.`,
+      ``,
+      `Name: ${form.name}`,
+      `Phone: ${form.phone}`,
+      `Date: ${form.date}`,
+      `Time: ${form.time}`,
+      `Guests: ${form.guests}`,
+    ];
+    if (form.notes.trim()) lines.push(`Special requests: ${form.notes.trim()}`);
+    lines.push("", "Please confirm my table. Thank you!");
+    const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener,noreferrer");
     onClose?.();
   };
@@ -66,89 +78,93 @@ export default function ReservationDialog({ open, onClose }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-espresso/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[1070] bg-espresso/50 backdrop-blur-sm"
             onClick={onClose}
           />
           <motion.div
             role="dialog"
             aria-modal="true"
             data-testid={TID.reserveDialog}
-            initial={{ opacity: 0, y: 20, scale: 0.98 }}
+            initial={{ opacity: 0, y: 30, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
-            className="fixed z-[71] inset-x-4 top-[8vh] mx-auto max-w-[520px] bg-cream border border-borderwarm rounded-3xl overflow-hidden shadow-[0_40px_80px_-30px_rgba(31,22,20,0.5)]"
+            className="fixed z-[1071] inset-x-3 sm:inset-x-4 bottom-3 sm:bottom-auto sm:top-[6vh] sm:mx-auto max-w-[540px] max-h-[92vh] overflow-y-auto bg-cream border border-borderwarm rounded-[28px] shadow-[0_40px_80px_-30px_rgba(31,22,20,0.5)]"
           >
-            <div className="p-7 lg:p-9">
-              <div className="flex items-start justify-between">
-                <div>
+            <div className="p-6 sm:p-8">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
                   <div className="eyebrow">Reservation · WhatsApp</div>
-                  <h3 className="mt-2 font-serif-display text-espresso text-3xl leading-tight tracking-tight">
+                  <h3 className="mt-2 font-serif-display text-espresso text-[26px] sm:text-3xl leading-tight tracking-tight">
                     Save your table.
                   </h3>
-                  <p className="mt-2 text-mutedwarm text-[13.5px]">
-                    We&rsquo;ll open WhatsApp with your details prefilled — send it and we&rsquo;ll confirm.
+                  <p className="mt-2 text-mutedwarm text-[13px]">
+                    We&rsquo;ll open WhatsApp with everything prefilled — send and we&rsquo;ll confirm within minutes.
                   </p>
                 </div>
                 <button
                   aria-label="Close"
                   onClick={onClose}
-                  className="w-9 h-9 grid place-items-center rounded-full border border-borderwarm hover:bg-white"
+                  className="w-10 h-10 min-h-[44px] min-w-[44px] shrink-0 grid place-items-center rounded-full border border-borderwarm hover:bg-white"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="mt-6 grid grid-cols-2 gap-3">
-                <div className="col-span-2">
-                  <label className="text-[11px] uppercase tracking-[0.28em] text-mutedwarm">Name</label>
+              {prefillItem && (
+                <div className="mt-5 flex items-center gap-2 rounded-full bg-caramel/15 border border-caramel/30 pl-3 pr-2 py-2">
+                  <Sparkles className="w-3.5 h-3.5 text-caramel" strokeWidth={2.2} />
+                  <span className="text-[12.5px] text-espresso truncate">
+                    You&rsquo;re reserving for <strong>{prefillItem}</strong>
+                  </span>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="mt-5 grid grid-cols-2 gap-3">
+                <Field label="Name" className="col-span-2">
                   <input
                     data-testid={TID.reserveName}
                     value={form.name}
                     onChange={set("name")}
                     placeholder="Your full name"
-                    className="mt-1 w-full h-11 px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]"
+                    className={inputCls}
                   />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-[11px] uppercase tracking-[0.28em] text-mutedwarm">Phone</label>
+                </Field>
+                <Field label="Phone" className="col-span-2">
                   <input
                     data-testid={TID.reservePhone}
                     value={form.phone}
                     onChange={set("phone")}
                     placeholder="+91 98XXXXXXXX"
                     inputMode="tel"
-                    className="mt-1 w-full h-11 px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]"
+                    className={inputCls}
                   />
-                </div>
-                <div>
-                  <label className="text-[11px] uppercase tracking-[0.28em] text-mutedwarm">Date</label>
+                </Field>
+                <Field label="Date">
                   <input
                     data-testid={TID.reserveDate}
                     type="date"
                     value={form.date}
                     min={today}
                     onChange={set("date")}
-                    className="mt-1 w-full h-11 px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]"
+                    className={inputCls}
                   />
-                </div>
-                <div>
-                  <label className="text-[11px] uppercase tracking-[0.28em] text-mutedwarm">Time</label>
+                </Field>
+                <Field label="Time">
                   <input
                     data-testid={TID.reserveTime}
                     type="time"
                     value={form.time}
                     onChange={set("time")}
-                    className="mt-1 w-full h-11 px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]"
+                    className={inputCls}
                   />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-[11px] uppercase tracking-[0.28em] text-mutedwarm">Guests</label>
+                </Field>
+                <Field label="Guests" className="col-span-2">
                   <select
                     data-testid={TID.reserveGuests}
                     value={form.guests}
                     onChange={set("guests")}
-                    className="mt-1 w-full h-11 px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]"
+                    className={inputCls}
                   >
                     {["1", "2", "3", "4", "5", "6", "7", "8+"].map((g) => (
                       <option key={g} value={g}>
@@ -156,23 +172,38 @@ export default function ReservationDialog({ open, onClose }) {
                       </option>
                     ))}
                   </select>
-                </div>
+                </Field>
+                <Field label="Special Requests · optional" className="col-span-2">
+                  <textarea
+                    data-testid="reserve-input-notes"
+                    value={form.notes}
+                    onChange={set("notes")}
+                    rows={2}
+                    placeholder="Window seat · Birthday · Anniversary · Party inquiry…"
+                    className={`${inputCls} !h-auto py-3 resize-none`}
+                  />
+                </Field>
 
                 {error && (
-                  <p className="col-span-2 text-[13px] text-red-700">{error}</p>
+                  <p className="col-span-2 text-[13px] text-red-700" data-testid="reserve-error">
+                    {error}
+                  </p>
                 )}
 
                 <button
                   type="submit"
                   data-testid={TID.reserveSubmit}
-                  className="col-span-2 btn-glow inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-espresso text-cream text-[14px] font-medium hover:bg-espresso2 transition-colors"
+                  className="col-span-2 btn-glow inline-flex items-center justify-center gap-2 min-h-[48px] h-12 px-6 rounded-full bg-espresso text-cream text-[14px] font-medium hover:bg-espresso2 transition-colors"
                 >
                   <MessageCircle className="w-4 h-4" />
                   Send on WhatsApp
                 </button>
 
                 <p className="col-span-2 text-center text-[11px] text-mutedwarm">
-                  Prefer to call? <a href="tel:+919561166185" className="text-espresso underline underline-offset-2">+91 95611 66185</a>
+                  Prefer to call?{" "}
+                  <a href="tel:+919561166185" className="text-espresso underline underline-offset-2">
+                    +91 95611 66185
+                  </a>
                 </p>
               </form>
             </div>
@@ -180,5 +211,17 @@ export default function ReservationDialog({ open, onClose }) {
         </>
       )}
     </AnimatePresence>
+  );
+}
+
+const inputCls =
+  "mt-1 w-full h-11 min-h-[44px] px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]";
+
+function Field({ label, children, className = "" }) {
+  return (
+    <label className={`block ${className}`}>
+      <span className="text-[11px] uppercase tracking-[0.28em] text-mutedwarm">{label}</span>
+      {children}
+    </label>
   );
 }

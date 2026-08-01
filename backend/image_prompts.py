@@ -115,3 +115,19 @@ IMAGE_PROMPTS = {
         "table, warm winter light. " + BRAND_GRADE
     ),
 }
+
+# --- Additional images for Ambiance Masonry Gallery ---
+IMAGE_PROMPTS["cafe_patio"] = (
+    "Sunlit outdoor patio of a specialty coffee cafe. Small round teak tables, "
+    "rattan chairs, potted olive tree and terracotta planters, warm string lights "
+    "overhead, dappled golden-hour sunlight, a cappuccino cup catching light on one "
+    "table. Ivy climbing a cream-painted wall. Cinematic, editorial, 35mm feel. "
+    + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["cafe_work_corner"] = (
+    "A quiet work-friendly corner of a specialty cafe. Boucle armchair by a large "
+    "window, a walnut writing desk with an open laptop softly out of focus, a "
+    "steaming ceramic mug, a small plant, brass table lamp on, warm afternoon "
+    "sunlight raking across the wall. Hygge, minimal, warm neutrals. " + BRAND_GRADE
+)

@@ -43,9 +43,9 @@ export default function Story() {
     <section
       id="story"
       data-testid={TID.story}
-      className="relative py-24 lg:py-32 bg-cream"
+      className="relative py-14 sm:py-20 lg:py-32 bg-cream"
     >
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-10 grid grid-cols-12 gap-10 lg:gap-16">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-12 gap-8 lg:gap-16">
         {/* Left column: sticky image */}
         <div className="col-span-12 lg:col-span-5 relative">
           <div className="lg:sticky lg:top-28">
@@ -65,7 +65,7 @@ export default function Story() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.9, delay: 0.1 }}
-              className="font-serif-display text-espresso text-4xl sm:text-5xl lg:text-[64px] leading-[1.02] tracking-[-0.02em]"
+              className="font-serif-display text-espresso text-[34px] leading-[1.05] sm:text-5xl lg:text-[64px] tracking-[-0.02em]"
             >
               A quiet obsession with <em className="text-caramel not-italic italic">coffee, craft &amp; company.</em>
             </motion.h2>
@@ -75,7 +75,7 @@ export default function Story() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1, delay: 0.2 }}
-              className="mt-10 clip-frame aspect-[3/4] max-w-[420px]"
+              className="mt-6 lg:mt-10 clip-frame aspect-[4/5] max-w-[420px]"
             >
               <img
                 src={img("barista_hands")}
@@ -98,19 +98,19 @@ export default function Story() {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, margin: "-80px" }}
-                className="py-10 border-t border-borderwarm first:border-t-0"
+                className="py-7 lg:py-10 border-t border-borderwarm first:border-t-0"
               >
-                <div className="grid grid-cols-12 gap-6">
+                <div className="grid grid-cols-12 gap-4 lg:gap-6">
                   <div className="col-span-2 sm:col-span-1">
-                    <span className="font-serif-display italic text-caramel text-4xl sm:text-5xl leading-none">
+                    <span className="font-serif-display italic text-caramel text-3xl sm:text-4xl lg:text-5xl leading-none">
                       {c.num}
                     </span>
                   </div>
                   <div className="col-span-10 sm:col-span-11">
-                    <h3 className="font-serif-display text-espresso text-2xl sm:text-3xl lg:text-[34px] leading-tight tracking-tight">
+                    <h3 className="font-serif-display text-espresso text-[22px] sm:text-3xl lg:text-[34px] leading-tight tracking-tight">
                       {c.title}
                     </h3>
-                    <p className="mt-4 text-espresso/70 text-[15px] sm:text-base leading-relaxed max-w-[560px]">
+                    <p className="mt-3 text-espresso/70 text-[14px] sm:text-base leading-relaxed max-w-[560px]">
                       {c.body}
                     </p>
                   </div>

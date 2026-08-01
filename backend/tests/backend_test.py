@@ -12,7 +12,9 @@ EXPECTED_SLUGS = {
     "barista_hands", "brownie", "cafe_seating", "cheesecake", "coffee_beans",
     "croissant", "frappe", "hero_interior", "hot_chocolate", "iced_latte",
     "mojito", "pizza", "pour_over", "sandwich", "sourdough_toast", "spanish_latte",
+    "cafe_patio", "cafe_work_corner",
 }
+NEW_SLUGS = {"cafe_patio", "cafe_work_corner"}
 
 
 def test_root():
@@ -26,7 +28,7 @@ def test_health_lists_16_images():
     assert r.status_code == 200
     data = r.json()
     assert data["status"] == "ok"
-    assert data["images_ready"] >= 16
+    assert data["images_ready"] >= 18
     slugs = {name.replace(".png", "") for name in data["images"]}
     missing = EXPECTED_SLUGS - slugs
     assert not missing, f"Missing images: {missing}"
@@ -36,11 +38,19 @@ def test_manifest():
     r = requests.get(f"{BASE_URL}/api/images/manifest")
     assert r.status_code == 200
     data = r.json()
-    assert data["count"] >= 16
+    assert data["count"] >= 18
     assert isinstance(data["images"], dict)
     for slug in EXPECTED_SLUGS:
         assert slug in data["images"], f"missing {slug}"
         assert data["images"][slug].endswith(f"{slug}.png")
+
+
+def test_new_ambiance_images_served():
+    for slug in NEW_SLUGS:
+        r = requests.get(f"{BASE_URL}/api/images/{slug}.png")
+        assert r.status_code == 200, f"{slug} not served"
+        assert r.headers["content-type"].startswith("image/png")
+        assert len(r.content) > 50 * 1024, f"{slug} body {len(r.content)} < 50KB"
 
 
 def test_hero_image_served():
