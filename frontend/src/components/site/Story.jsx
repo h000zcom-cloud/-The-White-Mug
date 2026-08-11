@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { TID } from "@/lib/testIds";
-import { img } from "@/lib/images";
+import Picture from "@/components/media/Picture";
 
 const CHAPTERS = [
   {
@@ -77,10 +77,12 @@ export default function Story() {
               transition={{ duration: 1, delay: 0.2 }}
               className="mt-6 lg:mt-10 clip-frame aspect-[4/5] max-w-[420px]"
             >
-              <img
-                src={img("barista_hands")}
-                alt="Barista pouring latte art"
-                className="w-full h-full object-cover"
+              <Picture
+                slug="barista_hands"
+                alt="A barista pouring a rosetta in latte art into a white ceramic cup"
+                aspect="auto"
+                sizes="(min-width: 1024px) 420px, 92vw"
+                className="h-full w-full"
               />
             </motion.div>
           </div>

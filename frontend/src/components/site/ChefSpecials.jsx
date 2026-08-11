@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Flame, Star, Wheat, Sparkles, ChevronRight } from "lucide-react";
 import { useContext } from "react";
 import { ReserveCtx } from "@/lib/reserve-context";
-import { img } from "@/lib/images";
+import Picture from "@/components/media/Picture";
 
 const SPECIALS = [
   {
@@ -78,11 +78,13 @@ export default function ChefSpecials() {
               className="group relative snap-start shrink-0 w-[78vw] sm:w-[46vw] lg:w-auto rounded-3xl overflow-hidden border border-borderwarm bg-white flex flex-col hover:shadow-[0_25px_60px_-30px_rgba(31,22,20,0.35)] transition-shadow duration-500"
             >
               <div className="relative aspect-[4/5] overflow-hidden">
-                <img
-                  src={img(s.image)}
+                <Picture
+                  slug={s.image}
                   alt={s.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
+                  aspect="auto"
+                  sizes="(min-width: 1024px) 320px, (min-width: 640px) 46vw, 78vw"
+                  className="h-full w-full"
+                  imgClassName="transition-transform duration-700 ease-brand group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-espresso/70 via-espresso/10 to-transparent" />
                 <span

@@ -131,3 +131,90 @@ IMAGE_PROMPTS["cafe_work_corner"] = (
     "steaming ceramic mug, a small plant, brass table lamp on, warm afternoon "
     "sunlight raking across the wall. Hygge, minimal, warm neutrals. " + BRAND_GRADE
 )
+
+
+# ---------------------------------------------------------------------------
+# Menu gap-fill shots.
+#
+# `frontend/npm run photo-report` lists the menu items that have no truthful
+# photograph and are currently borrowing another dish's shot. These prompts
+# close that gap. After generating, run `npm run images` in frontend/ and point
+# the item at its new slug in `frontend/src/data/menuImages.js`.
+# ---------------------------------------------------------------------------
+
+IMAGE_PROMPTS["french_fries"] = (
+    "A tall paper cone of golden hand-cut French fries with flaky sea salt, "
+    "standing in a small wire basket on a cream linen surface, a ramekin of "
+    "house dip beside it, a few fries resting on the linen. Warm window light "
+    "from the left, steam just visible. " + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["fries_peri_peri"] = (
+    "Crispy French fries tossed in deep red peri peri seasoning, piled on matte "
+    "black slate, visible flecks of chilli and herb, a lime wedge and a small "
+    "bowl of aioli beside. Overhead 30-degree angle, warm directional light. "
+    + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["fries_cheesy"] = (
+    "French fries drenched in glossy molten cheese sauce, a slow drip caught "
+    "mid-fall, chopped chives and cracked black pepper on top, served in a "
+    "shallow enamel dish. Close three-quarter angle, warm light, extreme texture "
+    "detail on the cheese. " + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["potato_wedges"] = (
+    "Thick-cut skin-on potato wedges, deep golden and dusted with herb "
+    "seasoning, arranged on parchment in a small cast-iron pan, sour cream dip "
+    "in a ceramic ramekin. Overhead shot, cream linen, warm daylight. "
+    + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["potato_nuggets"] = (
+    "Golden cheese-and-garlic potato nuggets, one broken open to show a molten "
+    "cheese pull, stacked on a small ivory plate with a dipping sauce alongside "
+    "and a sprig of parsley. Close macro angle, shallow depth of field, warm "
+    "light. " + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["jalapeno_pops"] = (
+    "Crisp golden breaded jalapeno cheese poppers on a matte black slate board, "
+    "one split open showing melted cream cheese and green chilli, a small bowl "
+    "of ranch dressing beside, scattered breadcrumbs. Warm overhead light. "
+    + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["garlic_bread"] = (
+    "A warm garlic baguette cut into batons, glistening with garlic butter and "
+    "chopped parsley, arranged on a wooden board lined with parchment, a small "
+    "dish of marinara beside. Soft window light, visible crumb and crust "
+    "texture. " + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["loaded_nachos"] = (
+    "A generous pile of crisp corn tortilla chips loaded with molten cheese "
+    "sauce, fresh tomato salsa, jalapeno rings, black olives and coriander, "
+    "served in a shallow terracotta dish. Overhead 45-degree angle, warm light, "
+    "vivid but natural colour. " + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["pasta_red"] = (
+    "Penne arrabbiata in a wide shallow ceramic bowl, glossy spicy tomato sauce "
+    "clinging to the pasta, fresh basil leaf on top, chilli flakes and grated "
+    "parmesan scattered, a fork twirling one piece. Overhead, cream linen, warm "
+    "light. " + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["pasta_white"] = (
+    "Penne alfredo in a wide shallow ivory bowl, silky cream parmesan sauce "
+    "coating every piece, cracked black pepper and shaved parmesan on top, a "
+    "sprig of parsley. Overhead shot, warm neutral light, rich but not yellow. "
+    + BRAND_GRADE
+)
+
+IMAGE_PROMPTS["pasta_pink"] = (
+    "Penne in a blush pink sauce — tomato and cream marbled together, the swirl "
+    "still visible — in a wide shallow ceramic bowl, basil chiffonade and "
+    "parmesan on top. Overhead 30-degree angle, cream linen, warm window light. "
+    + BRAND_GRADE
+)

@@ -1,0 +1,434 @@
+{
+  "barista_hands": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/barista_hands-400.avif",
+      "800": "/img/barista_hands-800.avif",
+      "1200": "/img/barista_hands-1200.avif"
+    },
+    "webp": {
+      "400": "/img/barista_hands-400.webp",
+      "800": "/img/barista_hands-800.webp",
+      "1200": "/img/barista_hands-1200.webp"
+    },
+    "fallback": "/img/barista_hands-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAwCdASoUAAsAPxl4slEspySisAgBkCMJYwC7ABhfKZ2qM9PZ3kAA/pOmivlpdpRcNiogS7gElQa169qo+c/w6EY3dZX5Q/Xf3MmYAAA=",
+    "color": "#080808",
+    "hash": "16321762"
+  },
+  "brownie": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/brownie-400.avif",
+      "800": "/img/brownie-800.avif",
+      "1200": "/img/brownie-1200.avif"
+    },
+    "webp": {
+      "400": "/img/brownie-400.webp",
+      "800": "/img/brownie-800.webp",
+      "1200": "/img/brownie-1200.webp"
+    },
+    "fallback": "/img/brownie-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAwCdASoUAAsAPxl2slCspySisAgBkCMJYwCdABn6kaeOaksN0BAA/XWjT28xLFqLBmmX1rqLmkJW4lV9zfg0GIWTx++EBrzTADUMYAAAAA==",
+    "color": "#080808",
+    "hash": "ab0edb61"
+  },
+  "cafe_patio": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/cafe_patio-400.avif",
+      "800": "/img/cafe_patio-800.avif",
+      "1200": "/img/cafe_patio-1200.avif"
+    },
+    "webp": {
+      "400": "/img/cafe_patio-400.webp",
+      "800": "/img/cafe_patio-800.webp",
+      "1200": "/img/cafe_patio-1200.webp"
+    },
+    "fallback": "/img/cafe_patio-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACQAwCdASoUAAsAPxl2slCspySisAgBkCMJQBOgAmWJvdtA17AAAPpF9g7PlfV/luUL24D2BjNacnLSILRs/me2JsSwq03xwRAAAA==",
+    "color": "#080808",
+    "hash": "0d32d21d"
+  },
+  "cafe_seating": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/cafe_seating-400.avif",
+      "800": "/img/cafe_seating-800.avif",
+      "1200": "/img/cafe_seating-1200.avif"
+    },
+    "webp": {
+      "400": "/img/cafe_seating-400.webp",
+      "800": "/img/cafe_seating-800.webp",
+      "1200": "/img/cafe_seating-1200.webp"
+    },
+    "fallback": "/img/cafe_seating-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACQAwCdASoUAAsAPxl2s1EspySisAgBkCMJQBOgAxP0P5JtWoAAAP7GapJP+kyPLOXwTx0dyhmeBrRjH5ztqM1xIuEZi6ZDgAA=",
+    "color": "#e8e8d8",
+    "hash": "29c13b5d"
+  },
+  "cafe_work_corner": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/cafe_work_corner-400.avif",
+      "800": "/img/cafe_work_corner-800.avif",
+      "1200": "/img/cafe_work_corner-1200.avif"
+    },
+    "webp": {
+      "400": "/img/cafe_work_corner-400.webp",
+      "800": "/img/cafe_work_corner-800.webp",
+      "1200": "/img/cafe_work_corner-1200.webp"
+    },
+    "fallback": "/img/cafe_work_corner-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQBACdASoUAAsAPxl0sVCspqSisAgBkCMJQBOgAy9jIfC2AnLGI5Z5IAD99gW2AEKNP3ILfLDU1XpvArvlovGnIAbKjLeVxwT9EpEAAAA=",
+    "color": "#281808",
+    "hash": "e2a29ccf"
+  },
+  "cheesecake": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/cheesecake-400.avif",
+      "800": "/img/cheesecake-800.avif",
+      "1200": "/img/cheesecake-1200.avif"
+    },
+    "webp": {
+      "400": "/img/cheesecake-400.webp",
+      "800": "/img/cheesecake-800.webp",
+      "1200": "/img/cheesecake-1200.webp"
+    },
+    "fallback": "/img/cheesecake-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACwAwCdASoUAAsAPxl0slCspqSisAgBkCMJZQC7AA1VlHB76NymAAD99qpDWNM9LJigPlCZBMQ1Zw9FPTE/nnxj400FsfAA",
+    "color": "#080808",
+    "hash": "94e317ad"
+  },
+  "coffee_beans": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/coffee_beans-400.avif",
+      "800": "/img/coffee_beans-800.avif",
+      "1200": "/img/coffee_beans-1200.avif"
+    },
+    "webp": {
+      "400": "/img/coffee_beans-400.webp",
+      "800": "/img/coffee_beans-800.webp",
+      "1200": "/img/coffee_beans-1200.webp"
+    },
+    "fallback": "/img/coffee_beans-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACwAwCdASoUAAsAPxl2slCspySisAgBkCMJYwC7ABjxOOtl8vIcGAD+syzkMBDWysv2dI/2wveZf24BuN1bn+hSAAA=",
+    "color": "#080808",
+    "hash": "dc4e86fe"
+  },
+  "croissant": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/croissant-400.avif",
+      "800": "/img/croissant-800.avif",
+      "1200": "/img/croissant-1200.avif"
+    },
+    "webp": {
+      "400": "/img/croissant-400.webp",
+      "800": "/img/croissant-800.webp",
+      "1200": "/img/croissant-1200.webp"
+    },
+    "fallback": "/img/croissant-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACwAwCdASoUAAsAPxl2slCspySisAgBkCMJQBWAA6e/NcKXwslKAAD+sy0zy+fsPYSL6127fHfKJrGmKf61fBZ6f1yQ+u7phSQAAA==",
+    "color": "#e8e8e8",
+    "hash": "93d13d4b"
+  },
+  "frappe": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/frappe-400.avif",
+      "800": "/img/frappe-800.avif",
+      "1200": "/img/frappe-1200.avif"
+    },
+    "webp": {
+      "400": "/img/frappe-400.webp",
+      "800": "/img/frappe-800.webp",
+      "1200": "/img/frappe-1200.webp"
+    },
+    "fallback": "/img/frappe-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAAsAPxl2s1EspySisAgBkCMJQBOmUABI/0GAbK39bsAA/leAxH6ye8SU0zMlWvbZoGtNzSZ7Y0vN80iwf9YuAAA=",
+    "color": "#281808",
+    "hash": "03772675"
+  },
+  "hero_interior": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/hero_interior-400.avif",
+      "800": "/img/hero_interior-800.avif",
+      "1200": "/img/hero_interior-1200.avif"
+    },
+    "webp": {
+      "400": "/img/hero_interior-400.webp",
+      "800": "/img/hero_interior-800.webp",
+      "1200": "/img/hero_interior-1200.webp"
+    },
+    "fallback": "/img/hero_interior-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAwCdASoUAAsAPxl4s1EspySisAgBkCMJQBOmUAApuaNLzXeQAADVPOmX9B1kv8wv3MgBgwDXIAypr1jyZFJgQsKM6WwAAAA=",
+    "color": "#080808",
+    "hash": "37682253"
+  },
+  "hot_chocolate": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/hot_chocolate-400.avif",
+      "800": "/img/hot_chocolate-800.avif",
+      "1200": "/img/hot_chocolate-1200.avif"
+    },
+    "webp": {
+      "400": "/img/hot_chocolate-400.webp",
+      "800": "/img/hot_chocolate-800.webp",
+      "1200": "/img/hot_chocolate-1200.webp"
+    },
+    "fallback": "/img/hot_chocolate-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAwCdASoUAAsAPxl0sVCspqSisAgBkCMJZQCdAA/vBWYSe45mAADfqA8U/HGa8STBi/4LGvfOaguZ6UrE3XhsosLX6AZbx4NexIAA",
+    "color": "#080808",
+    "hash": "07674d1c"
+  },
+  "iced_latte": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/iced_latte-400.avif",
+      "800": "/img/iced_latte-800.avif",
+      "1200": "/img/iced_latte-1200.avif"
+    },
+    "webp": {
+      "400": "/img/iced_latte-400.webp",
+      "800": "/img/iced_latte-800.webp",
+      "1200": "/img/iced_latte-1200.webp"
+    },
+    "fallback": "/img/iced_latte-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAwCdASoUAAsAPxl2s1CspySisAgBkCMJQBOmUABFdrzPJFo1OLwAAP5eKHLzE1kureWv/UiMA1yGF0siP6nDlOAG4IpjyXe7ngAA",
+    "color": "#b8a898",
+    "hash": "6be49565"
+  },
+  "mojito": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/mojito-400.avif",
+      "800": "/img/mojito-800.avif",
+      "1200": "/img/mojito-1200.avif"
+    },
+    "webp": {
+      "400": "/img/mojito-400.webp",
+      "800": "/img/mojito-800.webp",
+      "1200": "/img/mojito-1200.webp"
+    },
+    "fallback": "/img/mojito-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACQAwCdASoUAAsAPxl2slCspySisAgBkCMJQBOgAxeIk1rdWSlQAP5nDYcO6Oxmb77SI2Z1uBejI6rUSrJU8SKz4Ffy4AAA",
+    "color": "#d8c8b8",
+    "hash": "6b793ca1"
+  },
+  "pizza": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/pizza-400.avif",
+      "800": "/img/pizza-800.avif",
+      "1200": "/img/pizza-1200.avif"
+    },
+    "webp": {
+      "400": "/img/pizza-400.webp",
+      "800": "/img/pizza-800.webp",
+      "1200": "/img/pizza-1200.webp"
+    },
+    "fallback": "/img/pizza-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAwCdASoUAAsAPxl2s1EspySisAgBkCMJYwCw7BirX/ADMkMy+GAAAP7TPggzou7Cl2O8F8SP/b2jiH9Yp+bkC+4NvxRrrzbMCvQAAAA=",
+    "color": "#d8d8c8",
+    "hash": "1f6ccd2b"
+  },
+  "pour_over": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/pour_over-400.avif",
+      "800": "/img/pour_over-800.avif",
+      "1200": "/img/pour_over-1200.avif"
+    },
+    "webp": {
+      "400": "/img/pour_over-400.webp",
+      "800": "/img/pour_over-800.webp",
+      "1200": "/img/pour_over-1200.webp"
+    },
+    "fallback": "/img/pour_over-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAwCdASoUAAsAPxl2s1EspySisAgBkCMJQBOgBCn21RoCM452bgAA/tWF6IoeGILkLEeD9t0AU7cmrjvZrw6fVcFtMPrSVsaAAA==",
+    "color": "#e8e8e8",
+    "hash": "b669206b"
+  },
+  "sandwich": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/sandwich-400.avif",
+      "800": "/img/sandwich-800.avif",
+      "1200": "/img/sandwich-1200.avif"
+    },
+    "webp": {
+      "400": "/img/sandwich-400.webp",
+      "800": "/img/sandwich-800.webp",
+      "1200": "/img/sandwich-1200.webp"
+    },
+    "fallback": "/img/sandwich-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAAsAPxl2slCspySisAgBkCMJYwCdABZLyJbW47jIIAAA/t9JyaJr7IEsQYlvIuvILkAoKw4SGh0zZu32k1ugAAA=",
+    "color": "#080808",
+    "hash": "579db7d6"
+  },
+  "sourdough_toast": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/sourdough_toast-400.avif",
+      "800": "/img/sourdough_toast-800.avif",
+      "1200": "/img/sourdough_toast-1200.avif"
+    },
+    "webp": {
+      "400": "/img/sourdough_toast-400.webp",
+      "800": "/img/sourdough_toast-800.webp",
+      "1200": "/img/sourdough_toast-1200.webp"
+    },
+    "fallback": "/img/sourdough_toast-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAwCdASoUAAsAPxl4slEspySisAgBkCMJYgCdAB4NYuLTA+AEzFUcAPyi8fPXWXvh0Be+zIsr4vV+oqHeLYabb95KbzAXc0bNFoaeWRAAAA==",
+    "color": "#d8d8c8",
+    "hash": "5a304af9"
+  },
+  "spanish_latte": {
+    "width": 1408,
+    "height": 768,
+    "aspectRatio": 1.8333,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "avif": {
+      "400": "/img/spanish_latte-400.avif",
+      "800": "/img/spanish_latte-800.avif",
+      "1200": "/img/spanish_latte-1200.avif"
+    },
+    "webp": {
+      "400": "/img/spanish_latte-400.webp",
+      "800": "/img/spanish_latte-800.webp",
+      "1200": "/img/spanish_latte-1200.webp"
+    },
+    "fallback": "/img/spanish_latte-1200.jpg",
+    "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAwCdASoUAAsAPxl2slCspySisAgBkCMJYwCw7CEtvw4wQ2C7G2cAAP6Y1inH+BJYhKFFJTBRSQYAEXfxRKug6LeYMoims5IAAA==",
+    "color": "#c8b8a8",
+    "hash": "0a8bdb84"
+  }
+}

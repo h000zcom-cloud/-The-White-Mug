@@ -108,6 +108,31 @@ let webpackConfig = {
 };
 
 webpackConfig.devServer = (devServerConfig) => {
+  // The site is a single-page app with real routes (/menu), so any path that
+  // isn't a file on disk must serve index.html and let the router resolve it.
+  // Without this, a hard refresh or a shared link to /menu returns 404.
+  // `disableDotRule` keeps paths containing dots (e.g. a search term) working.
+  devServerConfig.historyApiFallback = {
+    ...(typeof devServerConfig.historyApiFallback === "object"
+      ? devServerConfig.historyApiFallback
+      : {}),
+    disableDotRule: true,
+    index: "/index.html",
+  };
+
+  // webpack-dev-server's static handler does not know the AVIF media type and
+  // falls back to application/octet-stream, which makes it look like the
+  // optimized images are broken during local development. Production hosts
+  // need the same mapping in their own config.
+  devServerConfig.static = {
+    ...(typeof devServerConfig.static === "object" ? devServerConfig.static : {}),
+    staticOptions: {
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith(".avif")) res.setHeader("Content-Type", "image/avif");
+      },
+    },
+  };
+
   // Add health check endpoints if enabled
   if (config.enableHealthCheck && setupHealthEndpoints && healthPluginInstance) {
     const originalSetupMiddlewares = devServerConfig.setupMiddlewares;

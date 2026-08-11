@@ -86,3 +86,9 @@ android-sdk/
 credentials.json
 *.key
 .credentials
+
+# local helper scripts and scratch output
+/*.ps1
+/status.txt
+/prep.txt
+/stage.txt

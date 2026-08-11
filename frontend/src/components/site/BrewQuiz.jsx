@@ -3,7 +3,8 @@ import { useContext, useMemo, useState } from "react";
 import { Coffee, Snowflake, Zap, Heart, Sparkles, Droplet, Leaf, RefreshCcw, ChevronRight } from "lucide-react";
 import { BREW_QUIZ_MAP, MENU } from "@/data/menu";
 import { ReserveCtx } from "@/lib/reserve-context";
-import { img } from "@/lib/images";
+import Picture from "@/components/media/Picture";
+import { imageFor } from "@/data/menuImages";
 
 const STEPS = [
   {
@@ -153,9 +154,15 @@ export default function BrewQuiz() {
                     transition={{ duration: 0.5 }}
                     className="flex flex-col sm:flex-row items-stretch gap-5"
                   >
-                    {result?.image && (
-                      <div className="w-full sm:w-[46%] aspect-[4/5] rounded-2xl overflow-hidden border border-borderwarm shrink-0">
-                        <img src={img(result.image)} alt={result.name} className="w-full h-full object-cover" />
+                    {result && (
+                      <div className="w-full shrink-0 overflow-hidden rounded-2xl border border-borderwarm sm:w-[46%]">
+                        <Picture
+                          slug={imageFor(result).slug}
+                          alt={result.name}
+                          aspect={4 / 5}
+                          objectPosition={imageFor(result).focus}
+                          sizes="(min-width: 640px) 320px, 92vw"
+                        />
                       </div>
                     )}
                     <div className="flex-1 flex flex-col">

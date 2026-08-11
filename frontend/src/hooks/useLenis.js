@@ -1,44 +1,40 @@
-import { useEffect } from "react";
-import Lenis from "lenis";
+/**
+ * In-page scroll helper.
+ *
+ * Kept at this path so existing imports stay valid. The smooth-scroll instance
+ * itself is set up by `useSmoothScroll`, which only engages on desktop pointers.
+ */
+
+/** Retained as a no-op; smooth scrolling is initialised in useSmoothScroll. */
+export default function useLenis() {}
 
 /**
- * Global smooth-scrolling. Attaches Lenis to the window and
- * drives a rAF loop for buttery momentum scrolling.
+ * Scroll an element into view, accounting for the fixed header.
+ *
+ * Routes through the smooth-scroll instance when one exists, so an anchor jump
+ * uses the same easing as a wheel scroll instead of the two fighting each other.
+ * Falls back to native behaviour, where `scroll-padding-top` on <html> supplies
+ * the header offset.
  */
-export default function useLenis() {
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.2,
-    });
-
-    let rafId;
-    const raf = (time) => {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    };
-    rafId = requestAnimationFrame(raf);
-
-    // Expose for anchor clicks
-    window.__lenis = lenis;
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-      delete window.__lenis;
-    };
-  }, []);
-}
-
-export const scrollToId = (id) => {
+export function scrollToId(id) {
   const el = document.getElementById(id);
-  if (!el) return;
-  if (window.__lenis) {
-    window.__lenis.scrollTo(el, { offset: -80, duration: 1.4 });
-  } else {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!el) {
+    window.location.hash = `#${id}`;
+    return;
   }
-};
+
+  const headerH = parseInt(
+    getComputedStyle(document.documentElement).getPropertyValue("--header-h") || "64",
+    10,
+  );
+
+  if (window.__lenis) {
+    window.__lenis.scrollTo(el, { offset: -(headerH + 16), duration: 1 });
+  } else {
+    el.scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+
+  // Move focus as well as the viewport, for keyboard and screen-reader users.
+  if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+  el.focus({ preventScroll: true });
+}

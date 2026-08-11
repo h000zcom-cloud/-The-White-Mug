@@ -1,0 +1,9 @@
+# Single-page app fallback.
+#
+# /menu is a real route resolved by the router in the browser, not a file on
+# disk. Without this rule a hard refresh or a shared link to /menu returns 404.
+# Read by Netlify and Cloudflare Pages. Other hosts need their own equivalent:
+#   Vercel   — { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+#   Nginx    — try_files $uri $uri/ /index.html;
+#   Apache   — FallbackResource /index.html
+/*  /index.html  200

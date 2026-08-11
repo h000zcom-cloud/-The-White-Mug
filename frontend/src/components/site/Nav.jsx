@@ -1,179 +1,361 @@
-import { motion } from "framer-motion";
-import { Phone, Menu as MenuIcon, X, Leaf } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Phone, Menu as MenuIcon, X, ArrowUpRight } from "lucide-react";
+import Logo from "@/components/brand/Logo";
+import VegMark from "@/components/brand/VegMark";
+import useCafeStatus from "@/hooks/useCafeStatus";
+import { BRAND_EASE } from "@/lib/motion";
 import { TID } from "@/lib/testIds";
-import { scrollToId } from "@/hooks/useLenis";
+import { cn } from "@/lib/utils";
 
+const PHONE = "+919561166185";
+
+/**
+ * Real URLs, so every item is a genuine link — middle-click, open-in-new-tab and
+ * crawlers all work, none of which is true of a button that calls scrollTo.
+ */
 const LINKS = [
-  { id: "top", label: "Home" },
-  { id: "story", label: "Our Story" },
-  { id: "menu", label: "Menu" },
-  { id: "quiz", label: "Find My Brew" },
-  { id: "reviews", label: "Reviews" },
-  { id: "location", label: "Location" },
+  { to: "/menu", label: "Menu" },
+  { to: "/#story", label: "Our Story" },
+  { to: "/#quiz", label: "Find My Brew" },
+  { to: "/#reviews", label: "Reviews" },
+  { to: "/#location", label: "Visit" },
 ];
+
+/**
+ * Live open/closed indicator.
+ *
+ * Two forms: a full pill with text where there's room, and a bare pulsing dot
+ * beside the logo where there isn't. The dot alone still communicates the one
+ * thing that matters at a glance — are they open — without eating 180px of a
+ * phone's header.
+ */
+function StatusDot({ status, className }) {
+  return (
+    <span aria-hidden="true" className={cn("relative flex h-[7px] w-[7px]", className)}>
+      {status.open && (
+        <span
+          className={cn(
+            "absolute inline-flex h-full w-full animate-ping rounded-full opacity-70 motion-reduce:animate-none",
+            status.closingSoon ? "bg-caramel" : "bg-vegetal",
+          )}
+        />
+      )}
+      <span
+        className={cn(
+          "relative inline-flex h-[7px] w-[7px] rounded-full",
+          status.closingSoon ? "bg-caramel" : status.open ? "bg-vegetal" : "bg-mutedwarm",
+        )}
+      />
+    </span>
+  );
+}
+
+/**
+ * The full pill.
+ *
+ * Split into a state word and a qualifier rather than one flat run of text.
+ * "Open" is the answer; "until 11 PM" is the detail — giving them different
+ * weights lets the eye take the answer first and read the rest only if it wants
+ * to. The old version set the whole string at one weight, so it scanned as a
+ * label rather than a live signal.
+ */
+function StatusPill({ status, className }) {
+  return (
+    <span
+      data-testid="nav-live-status"
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full border py-1 pl-2.5 pr-3 transition-colors duration-500",
+        status.closingSoon
+          ? "border-caramel/40 bg-caramel/[0.09]"
+          : status.open
+            ? "border-vegetal/30 bg-vegetal/[0.08]"
+            : "border-borderwarm bg-cream2",
+        className,
+      )}
+    >
+      <StatusDot status={status} />
+      <span className="flex items-baseline gap-1.5 whitespace-nowrap leading-none">
+        <span
+          className={cn(
+            "text-[11.5px] font-semibold tracking-tight",
+            status.closingSoon ? "text-caramel" : status.open ? "text-vegetal" : "text-mutedwarm",
+          )}
+        >
+          {status.state}
+        </span>
+        <span className="text-[10.5px] tracking-tight text-mutedwarm">{status.detail}</span>
+      </span>
+    </span>
+  );
+}
 
 export default function Nav({ onReserveClick }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { pathname, hash } = useLocation();
+  const status = useCafeStatus();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const go = (id) => {
-    setOpen(false);
-    scrollToId(id === "top" ? "hero" : id);
-  };
+  useEffect(() => setOpen(false), [pathname, hash]);
+
+  // Hold the page still and let Escape dismiss while the drawer is open.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const onMenuRoute = pathname === "/menu";
 
   return (
     <>
-      <motion.header
+      <header
         data-testid={TID.nav}
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.9, ease: [0.2, 0.7, 0.2, 1] }}
-        className={`fixed top-0 inset-x-0 z-50 transition-[background,border,box-shadow] duration-500 ${
+        className={cn(
+          // duration-400 is not on Tailwind's duration scale either, so it was
+          // also emitting nothing. 300 is the nearest real step.
+          "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 ease-brand",
+          /*
+           * Opaque enough to read against anything. At 88% the logo and status
+           * pill washed out whenever a dark photograph scrolled underneath —
+           * the header has to stay legible over the whole page, not just the
+           * cream sections.
+           */
+          /*
+           * Opacity values use bracket syntax on purpose.
+           *
+           * `bg-cream/97` and `bg-cream/92` looked correct but generated nothing:
+           * Tailwind only emits multiples of five for that scale, so the header
+           * ended up with no background at all and went fully transparent over
+           * dark sections. Bracket values are always generated.
+           */
           scrolled
-            ? "bg-cream/85 backdrop-blur-xl border-b border-borderwarm shadow-[0_10px_30px_-25px_rgba(31,22,20,0.25)]"
-            : "bg-transparent border-b border-transparent"
-        }`}
+            ? "border-b border-borderwarm bg-cream/[0.97] shadow-[0_1px_0_0_rgba(25,23,20,0.04),0_12px_28px_-26px_rgba(25,23,20,0.35)] backdrop-blur-xl supports-[backdrop-filter]:bg-cream/[0.9]"
+            : "border-b border-transparent bg-cream/[0.72] backdrop-blur-md supports-[backdrop-filter]:bg-cream/[0.5]",
+        )}
       >
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between h-[64px] lg:h-[72px]">
-          {/* Logo */}
-          <button
+        {/*
+          justify-between places the three groups deliberately: logo left, nav
+          centred, actions right. On mobile the nav is display:none, so the same
+          rule collapses cleanly to logo-left / actions-right.
+        */}
+        <div
+          className="mx-auto flex max-w-shell items-center justify-between gap-3 px-3.5 sm:px-6 lg:px-10"
+          style={{ height: "var(--header-h)" }}
+        >
+          <Link
+            to="/"
             data-testid={TID.navLogo}
-            onClick={() => go("top")}
-            className="flex items-center gap-2.5 group"
+            aria-label="The White Mug — home"
+            className="flex shrink-0 items-center gap-2 rounded-lg"
           >
-            <MugIcon />
-            <div className="leading-none text-left">
-              <div className="font-serif-display text-espresso text-[15px] sm:text-[19px] tracking-tight">
-                THE WHITE MUG
-              </div>
-              <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.36em] sm:tracking-[0.4em] text-mutedwarm mt-1">
-                cafe · nashik
-              </div>
-            </div>
-          </button>
+            <Logo compact />
+            {/* Below xl the pill doesn't fit; the dot carries the signal. */}
+            <StatusDot status={status} className="ml-0.5 lg:hidden" />
+          </Link>
 
-          {/* Center links */}
-          <nav className="hidden lg:flex items-center gap-7">
-            {LINKS.map((l) => (
-              <button
-                key={l.id}
-                data-testid={TID.navLink(l.id)}
-                onClick={() => go(l.id)}
-                className="group relative text-[13px] font-medium text-espresso/85 hover:text-espresso transition-colors"
-              >
-                <span>{l.label}</span>
-                <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-caramel scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
-              </button>
-            ))}
+          {/*
+            Centre nav. The hover/active state is a pill rather than an
+            underline: at this compact height an underline sits awkwardly close
+            to the header edge, and a pill gives a bigger, more forgiving
+            pointer target.
+          */}
+          <nav aria-label="Main" className="hidden items-center lg:flex">
+            {LINKS.map((l) => {
+              const active = l.to === "/menu" && onMenuRoute;
+              return (
+                <NavLink
+                  key={l.to}
+                  to={l.to}
+                  data-testid={TID.navLink(l.label.toLowerCase().replace(/\s+/g, "-"))}
+                  className={cn(
+                    "group relative rounded-full px-3 py-2 text-[13px] font-medium transition-colors duration-300",
+                    active ? "text-espresso" : "text-espresso/75 hover:text-espresso",
+                  )}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      aria-hidden="true"
+                      className="absolute inset-0 -z-10 rounded-full bg-espresso/[0.07]"
+                      transition={{ duration: 0.3, ease: BRAND_EASE }}
+                    />
+                  )}
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 -z-10 scale-90 rounded-full bg-espresso/0 transition-all duration-300 ease-brand group-hover:scale-100 group-hover:bg-espresso/[0.05]"
+                  />
+                  {l.label}
+                </NavLink>
+              );
+            })}
           </nav>
 
-          {/* Right cluster */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <span
-              className="chip hidden sm:inline-flex !py-1.5 !px-3 !text-[11.5px]"
-              data-testid="nav-veg-badge"
-            >
-              <Leaf className="w-3.5 h-3.5 text-vegetal" strokeWidth={2.4} />
-              <span className="text-vegetal font-semibold">Pure Veg</span>
-            </span>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            {/* Shown from lg rather than xl, so it isn't present on one desktop
+                width and missing on the next. */}
+            <StatusPill status={status} className="hidden lg:inline-flex" />
 
             <a
               data-testid={TID.navCall}
-              href="tel:+919561166185"
-              className="hidden sm:inline-flex items-center gap-2 h-10 min-h-[44px] px-4 rounded-full border border-borderwarm text-espresso hover:bg-white transition-colors text-[13px] font-medium"
+              href={`tel:${PHONE}`}
+              aria-label="Call the cafe"
+              className="hidden h-9 items-center gap-1.5 rounded-full border border-borderwarm bg-white/60 px-3 text-[12.5px] font-medium text-espresso transition-colors hover:bg-white sm:inline-flex"
             >
-              <Phone className="w-3.5 h-3.5" />
-              Call
+              <Phone aria-hidden="true" className="h-3.5 w-3.5" />
+              <span className="hidden md:inline">Call</span>
             </a>
 
             <button
+              type="button"
               data-testid={TID.navReserve}
               onClick={onReserveClick}
-              className="btn-glow hidden lg:inline-flex items-center gap-2 h-10 min-h-[44px] px-5 rounded-full bg-espresso text-cream text-[13px] font-medium hover:bg-espresso2 transition-colors"
+              className="btn-glow group hidden h-9 items-center gap-1.5 rounded-full bg-espresso pl-4 pr-3 text-[12.5px] font-medium text-cream transition-colors hover:bg-espresso2 lg:inline-flex"
             >
-              Reserve Table
-              <span className="opacity-70">↗</span>
+              Reserve
+              <ArrowUpRight
+                aria-hidden="true"
+                className="h-3.5 w-3.5 transition-transform duration-300 ease-brand group-hover:translate-x-px group-hover:-translate-y-px"
+              />
             </button>
 
             <button
+              type="button"
               data-testid={TID.navMobileToggle}
               onClick={() => setOpen((v) => !v)}
-              className="lg:hidden w-11 h-11 min-h-[44px] grid place-items-center rounded-full border border-borderwarm bg-white/70 backdrop-blur-md"
-              aria-label="Toggle menu"
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="grid h-9 w-9 place-items-center rounded-full border border-borderwarm bg-white/70 text-espresso backdrop-blur-md transition-colors hover:bg-white lg:hidden"
             >
-              {open ? <X className="w-4 h-4" /> : <MenuIcon className="w-4 h-4" />}
+              {open ? (
+                <X aria-hidden="true" className="h-4 w-4" />
+              ) : (
+                <MenuIcon aria-hidden="true" className="h-4 w-4" />
+              )}
             </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Mobile drawer */}
-      <motion.div
-        data-testid={TID.navMobileDrawer}
-        initial={false}
-        animate={open ? { opacity: 1, pointerEvents: "auto" } : { opacity: 0, pointerEvents: "none" }}
-        transition={{ duration: 0.3 }}
-        className="lg:hidden fixed inset-0 z-40 bg-cream/95 backdrop-blur-xl pt-20 px-6 overflow-y-auto pb-32"
-      >
-        <div className="flex flex-col gap-1">
-          {LINKS.map((l, i) => (
-            <motion.button
-              key={l.id}
-              onClick={() => go(l.id)}
-              initial={{ opacity: 0, x: -20 }}
-              animate={open ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-              transition={{ delay: 0.05 + i * 0.05, duration: 0.4 }}
-              className="text-left py-4 border-b border-borderwarm font-serif-display text-3xl text-espresso"
-            >
-              {l.label}
-            </motion.button>
-          ))}
-          <motion.button
-            onClick={() => {
-              setOpen(false);
-              onReserveClick?.();
-            }}
-            initial={{ opacity: 0, x: -20 }}
-            animate={open ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-            transition={{ delay: 0.35, duration: 0.4 }}
-            className="mt-6 h-14 min-h-[48px] w-full rounded-full bg-espresso text-cream font-medium"
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id="mobile-nav"
+            data-testid={TID.navMobileDrawer}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: BRAND_EASE }}
+            /*
+             * Above everything, including the bottom dock, and fully opaque.
+             *
+             * Two things were wrong before. It was translucent, so the page
+             * behind bled through and the whole panel read as murky. And because
+             * it covered the site header, it covered the close button with it —
+             * leaving no visible way out. The drawer now carries its own header
+             * row with the logo and a close button, so it is self-contained.
+             */
+            className="fixed inset-0 z-[1000] flex flex-col bg-cream lg:hidden"
           >
-            Reserve a Table →
-          </motion.button>
-          <div className="mt-6 flex items-center gap-2 flex-wrap">
-            <span className="chip">
-              <Leaf className="w-3.5 h-3.5 text-vegetal" strokeWidth={2.4} />
-              <span className="text-vegetal font-semibold">Pure Veg</span>
-            </span>
-            <a href="tel:+919561166185" className="chip">
-              <Phone className="w-3.5 h-3.5" /> +91 95611 66185
-            </a>
-          </div>
-        </div>
-      </motion.div>
-    </>
-  );
-}
+            <div
+              className="flex shrink-0 items-center justify-between gap-3 border-b border-borderwarm px-3.5 sm:px-6"
+              style={{ height: "var(--header-h)" }}
+            >
+              <Link to="/" aria-label="The White Mug - home" onClick={() => setOpen(false)}>
+                <Logo compact interactive={false} />
+              </Link>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close menu"
+                data-testid="nav-mobile-close"
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-borderwarm bg-white text-espresso"
+              >
+                <X aria-hidden="true" className="h-4 w-4" />
+              </button>
+            </div>
 
-function MugIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 40 40" fill="none" aria-hidden="true" className="sm:w-[34px] sm:h-[34px]">
-      <rect x="1" y="1" width="38" height="38" rx="12" fill="#FFFFFF" stroke="#EDE4D9" />
-      <path
-        d="M12 15h13a2 2 0 0 1 2 2v7a5 5 0 0 1-5 5h-7a5 5 0 0 1-5-5v-7a2 2 0 0 1 2-2Z"
-        stroke="#1F1614"
-        strokeWidth="1.6"
-      />
-      <path d="M27 18h1.5a2.5 2.5 0 0 1 0 5H27" stroke="#1F1614" strokeWidth="1.6" />
-      <path d="M16 11c1 1 1 2 0 3M20 11c1 1 1 2 0 3" stroke="#C89D66" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
+            <nav
+              aria-label="Mobile"
+              className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-5 pt-3"
+              style={{ paddingBottom: "max(20px, env(safe-area-inset-bottom))" }}
+            >
+              {LINKS.map((l, i) => (
+                <motion.div
+                  key={l.to}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.04 + i * 0.04, duration: 0.36, ease: BRAND_EASE }}
+                >
+                  <Link
+                    to={l.to}
+                    className="flex items-center justify-between gap-3 border-b border-borderwarm py-3.5 text-[22px] font-light tracking-[-0.02em] text-espresso"
+                  >
+                    {l.label}
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0 text-mutedwarm" />
+                  </Link>
+                </motion.div>
+              ))}
+
+              {/*
+                Sits directly under the links rather than being pushed to the
+                floor with mt-auto, which left a large dead gap in the middle of
+                the panel on a tall phone.
+              */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.26, duration: 0.36, ease: BRAND_EASE }}
+                className="mt-6"
+              >
+                <StatusPill status={status} />
+
+                <div className="mt-3 grid grid-cols-2 gap-2.5">
+                  <a
+                    href={`tel:${PHONE}`}
+                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-espresso/20 bg-white text-[14px] font-medium text-espresso"
+                  >
+                    <Phone aria-hidden="true" className="h-4 w-4" />
+                    Call
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      onReserveClick?.();
+                    }}
+                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-espresso text-[14px] font-semibold text-cream"
+                  >
+                    Reserve
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <p className="mt-4 flex items-start gap-2 text-[11.5px] leading-snug text-mutedwarm">
+                  <VegMark className="mt-px h-3.5 w-3.5" />
+                  100% pure vegetarian kitchen · Mahatma Nagar Road, Nashik
+                </p>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

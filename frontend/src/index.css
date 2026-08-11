@@ -1,135 +1,360 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+/* Fonts are loaded via <link> in public/index.html to avoid an @import
+   request chain that would delay first paint. */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* -----------------------------------------
-   The White Mug – design tokens
-   ----------------------------------------- */
-:root {
-  --cream: #FAF8F5;
-  --cream-2: #F3EDE6;
-  --espresso: #1F1614;
-  --espresso-2: #2D1F1B;
-  --caramel: #C89D66;
-  --caramel-2: #D4A359;
-  --ivory: #FFFFFF;
-  --border-warm: #EDE4D9;
-  --muted: #6E655F;
-  --green-veg: #2D7A4D;
+/* -----------------------------------------------------------------------------
+   The White Mug — design tokens
 
-  /* shadcn */
-  --background: 34 33% 97%;
-  --foreground: 12 20% 10%;
+   Values match tailwind.config.js. Sampled from the storefront: white sign,
+   near-black lettering, pale blue-grey facade, warm pendant light, plants.
+   -------------------------------------------------------------------------- */
+:root {
+  --cream: #fbfaf8;
+  --cream-2: #f1efea;
+  --espresso: #191714;
+  --espresso-2: #2a2622;
+  --caramel: #c1873f;
+  --caramel-2: #d9a44e;
+  --ivory: #ffffff;
+  --border-warm: #e7e3db;
+  --muted: #5f5a54;
+  --green-veg: #47694e;
+  --mist: #e6ebed;
+  --mist-2: #d3dcdf;
+
+  /* Height of the fixed header. Drives scroll-padding so anchored sections
+     never land underneath it — one variable instead of magic numbers. */
+  --header-h: 58px;
+
+  /*
+   * Height of the menu page's sticky search + filter bar. The category rail and
+   * the section scroll offsets both key off this. Previously the rail used a
+   * hard-coded 108px guess, which is why the "Jump to" heading sat underneath
+   * the bar, and why jumping to a category landed the heading behind it.
+   */
+  --menubar-h: 106px;
+
+  /*
+   * Clearance for the fixed mobile action dock. Matches the compact dock:
+   * 44px row + 12px chrome + 8px inset. Kept as a token so the footer padding
+   * and the dock's own height can't drift apart.
+   */
+  --dock-h: 64px;
+
+  /* shadcn tokens, kept in sync with the palette above. */
+  --background: 40 23% 98%;
+  --foreground: 36 11% 9%;
   --card: 0 0% 100%;
-  --card-foreground: 12 20% 10%;
+  --card-foreground: 36 11% 9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 12 20% 10%;
-  --primary: 12 20% 10%;
-  --primary-foreground: 34 33% 97%;
-  --secondary: 34 25% 92%;
-  --secondary-foreground: 12 20% 10%;
-  --muted-hsl: 30 8% 40%;
-  --muted-foreground: 30 8% 40%;
-  --accent: 32 44% 60%;
-  --accent-foreground: 12 20% 10%;
+  --popover-foreground: 36 11% 9%;
+  --primary: 36 11% 9%;
+  --primary-foreground: 40 23% 98%;
+  --secondary: 40 18% 94%;
+  --secondary-foreground: 36 11% 9%;
+  --muted-hsl: 33 5% 35%;
+  --muted-foreground: 33 5% 35%;
+  --accent: 33 51% 50%;
+  --accent-foreground: 36 11% 9%;
   --destructive: 0 62% 40%;
   --destructive-foreground: 0 0% 100%;
-  --border: 32 25% 88%;
-  --input: 32 25% 88%;
-  --ring: 32 44% 55%;
+  --border: 40 18% 88%;
+  --input: 40 18% 88%;
+  --ring: 33 51% 50%;
   --radius: 1rem;
 }
 
-* { border-color: hsl(var(--border)); }
+@media (min-width: 640px) {
+  :root {
+    --menubar-h: 116px;
+  }
+}
 
-html, body, #root {
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 68px;
+    --dock-h: 0px;
+  }
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  /* Anchor targets stop below the fixed header instead of under it. */
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+  -webkit-text-size-adjust: 100%;
+}
+
+/*
+ * Native smooth scrolling for anchor jumps — but only when the JS smooth-scroll
+ * instance isn't running. Lenis adds `.lenis-smooth` to <html>; leaving both
+ * active makes them fight over the scroll position and stutter. On phones and
+ * under reduced motion Lenis never initialises, so this is what runs.
+ */
+html:not(.lenis-smooth) {
+  scroll-behavior: smooth;
+}
+
+/* Lenis requirements: it drives the position itself and needs the document to
+   stop managing scroll snapping and overscroll behaviour. */
+html.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+html.lenis-smooth body {
+  min-height: 100%;
+}
+.lenis-stopped {
+  overflow: hidden;
+}
+
+html,
+body,
+#root {
   background: var(--cream);
   color: var(--espresso);
 }
 
 body {
   margin: 0;
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
-/* Kill CRA default center alignment */
-.App { text-align: left; }
+.App {
+  text-align: left;
+}
 
-/* Serif display */
+/* -----------------------------------------------------------------------------
+   Accessibility
+   -------------------------------------------------------------------------- */
+
+/*
+ * A single visible focus treatment for everything interactive. The previous
+ * build had none, which makes the site effectively unusable by keyboard: you
+ * cannot see where you are. :focus-visible means it appears for keyboard and
+ * assistive input but not on mouse click, so it costs the pointer user nothing.
+ */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--espresso);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* On ink-coloured surfaces the dark ring would disappear. */
+.on-ink :where(a, button, input, [tabindex]):focus-visible {
+  outline-color: var(--caramel-2);
+}
+
+/* Skip link: first thing in the tab order, hidden until focused. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  translate: -50% -150%;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: var(--espresso);
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 600;
+  transition: translate 0.2s cubic-bezier(0.22, 0.75, 0.18, 1);
+}
+.skip-link:focus-visible {
+  translate: -50% 0;
+  outline-color: var(--caramel-2);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   Type
+   -------------------------------------------------------------------------- */
+
+/* Wide-tracked geometric caps, as on the sign. */
+.font-sign {
+  font-family: "Jost", "Plus Jakarta Sans", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  font-weight: 400;
+}
+
+/*
+ * Section headings.
+ *
+ * These were Playfair Display, which put the site in the same visual bracket as
+ * every other "warm minimalist cafe" template — a display serif with a caramel
+ * italic accent word is the default. Your sign is a wide, light geometric sans,
+ * so the headings now match it. Same class name so every existing heading picks
+ * this up without edits.
+ */
 .font-serif-display {
-  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-family: "Jost", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.015em;
   font-feature-settings: "liga" 1, "kern" 1;
-  letter-spacing: -0.02em;
 }
 
-/* Text selection */
+/*
+ * The accent words inside those headings were italic. Jost's italic is
+ * synthesised (we only load upright weights), and a faux-oblique geometric sans
+ * looks broken. Accents now carry weight and colour instead of slant, which
+ * reads more deliberate anyway.
+ */
+.font-serif-display em,
+.font-serif-display i {
+  font-style: normal;
+  font-weight: 400;
+}
+
+/*
+ * Genuine serif, reserved for pull-quotes — the one place a contrasting voice
+ * earns its keep. Playfair is still loaded, at two weights, only for this.
+ */
+.font-quote {
+  font-family: "Playfair Display", Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+.eyebrow {
+  font-family: "Jost", "Plus Jakarta Sans", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* Balanced headline wrapping — avoids a single orphan word on the last line. */
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/*
+ * Selected text. The previous pairing was white on solid caramel — about 2.4:1,
+ * which is unreadable, and it made a page of selected text look like it had been
+ * highlighted with a marker. A pale tint of the same accent keeps the brand
+ * colour while leaving the ink legible.
+ */
 ::selection {
-  background: var(--caramel);
+  background: rgba(193, 135, 63, 0.26);
   color: var(--espresso);
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--cream); }
+/* -----------------------------------------------------------------------------
+   Chrome
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
 ::-webkit-scrollbar-thumb {
-  background: #d9cfc3;
+  background: #d8d3ca;
   border-radius: 999px;
   border: 2px solid var(--cream);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--caramel); }
+::-webkit-scrollbar-thumb:hover {
+  background: var(--caramel);
+}
 
-/* Grain texture overlay (site-wide, extremely subtle) */
+/*
+ * Paper grain. Previously this was a fixed full-viewport layer with
+ * mix-blend-mode: multiply, which forces the browser to re-blend the entire
+ * page on every scroll frame — one of the more expensive things you can do on a
+ * mid-range Android. Plain opacity gets a near-identical result for free.
+ */
 .grain::before {
   content: "";
   pointer-events: none;
   position: fixed;
   inset: 0;
   z-index: 60;
-  opacity: 0.045;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.09  0 0 0 0 0.08  0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.09  0 0 0 0 0.08  0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
-/* Hide horizontal scrollbars but keep native scroll on touch */
-.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
-.no-scrollbar::-webkit-scrollbar { display: none; }
-
-/* Line clamp helpers (Tailwind 3 has these but keep as safety) */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-/* -----------------------------------------
-   Utility bits
-   ----------------------------------------- */
+/*
+ * Horizontal scrollers fade out at the edges instead of guillotining a word
+ * mid-character. The fade is the affordance: it reads as "there's more this way"
+ * where a hard cut just looks like a layout bug.
+ */
+.edge-fade {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 14px,
+    #000 calc(100% - 22px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 14px,
+    #000 calc(100% - 22px),
+    transparent 100%
+  );
+}
+
+/* Anchored menu categories must clear both the header and the sticky filter bar. */
+.scroll-target {
+  scroll-margin-top: calc(var(--header-h) + var(--menubar-h) + 12px);
+}
+
+/* -----------------------------------------------------------------------------
+   Utilities
+   -------------------------------------------------------------------------- */
 .hairline {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-warm) 20%, var(--border-warm) 80%, transparent);
-}
-
-.eyebrow {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.28em;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--muted);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border-warm) 20%,
+    var(--border-warm) 80%,
+    transparent
+  );
 }
 
 .chip {
@@ -138,7 +363,7 @@ body {
   gap: 0.5rem;
   padding: 0.55rem 1rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border-warm);
   font-size: 12.5px;
@@ -146,15 +371,14 @@ body {
   color: var(--espresso);
 }
 
-/* Masked reveal — used in hero */
 .mask-line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.12em;
-  line-height: 1.02;
+  /* Enough room for descenders; overflow:hidden was clipping the tail of "y". */
+  padding-bottom: 0.16em;
+  line-height: 1.04;
 }
 
-/* Slow marquee wrapper */
 .marquee-fade::before,
 .marquee-fade::after {
   content: "";
@@ -174,28 +398,26 @@ body {
   background: linear-gradient(to left, var(--cream), transparent);
 }
 
-/* Menu category pill (in-card look) */
 .pill-tab {
-  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease;
 }
 
-/* Coffee cup icon stroke */
-.stroke-espresso { stroke: var(--espresso); }
-
-/* Nice image treatment — clipped frames */
 .clip-frame {
   overflow: hidden;
   border-radius: 24px;
-  box-shadow: 0 30px 60px -25px rgba(31, 22, 20, 0.25),
-              0 12px 24px -18px rgba(31, 22, 20, 0.18);
+  box-shadow:
+    0 30px 60px -25px rgba(25, 23, 20, 0.22),
+    0 12px 24px -18px rgba(25, 23, 20, 0.16);
 }
 .clip-frame-tall {
   overflow: hidden;
   border-radius: 220px 220px 24px 24px;
-  box-shadow: 0 30px 60px -25px rgba(31, 22, 20, 0.28);
+  box-shadow: 0 30px 60px -25px rgba(25, 23, 20, 0.26);
 }
 
-/* Button glow */
 .btn-glow {
   position: relative;
   isolation: isolate;
@@ -205,23 +427,156 @@ body {
   position: absolute;
   inset: -2px;
   border-radius: inherit;
-  background: radial-gradient(circle at 30% 30%, rgba(212, 163, 89, 0.45), transparent 60%);
+  background: radial-gradient(circle at 30% 30%, rgba(217, 164, 78, 0.45), transparent 60%);
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: -1;
   filter: blur(14px);
 }
-.btn-glow:hover::after { opacity: 1; }
+.btn-glow:hover::after {
+  opacity: 1;
+}
 
-/* Reveal children stagger fallback (used when framer isn't wanted) */
-@keyframes fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-.fade-up { animation: fade-up 0.9s cubic-bezier(.2,.7,.2,1) both; }
+/* -----------------------------------------------------------------------------
+   Logo draw-on
 
-/* Reduce motion */
+   Mirrors the opening sequence in public/index.html so the mark animates the
+   same way wherever it appears. Relies on pathLength="1" on each path, which
+   normalises stroke length so one dasharray value fits all five strokes.
+   -------------------------------------------------------------------------- */
+.mark-draw path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: mark-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+/* Drawn in the order a hand would: rim, bowl, handle, stem, leaf, saucer. */
+.mark-draw .mark-p1 { animation-delay: 0.04s; }
+.mark-draw .mark-p2 { animation-delay: 0.14s; }
+.mark-draw .mark-p3 { animation-delay: 0.36s; }
+.mark-draw .mark-p4 { animation-delay: 0.46s; }
+.mark-draw .mark-p5 { animation-delay: 0.6s; }
+.mark-draw .mark-p6 { animation-delay: 0.76s; }
+
+@keyframes mark-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Steam
+
+   Three offset wisps on a long loop. Used as a decorative accent beside
+   headings; purely ornamental and always aria-hidden.
+   -------------------------------------------------------------------------- */
+.steam path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: steam-rise 3.4s ease-in-out infinite;
+}
+.steam path:nth-child(2) { animation-delay: 0.5s; }
+.steam path:nth-child(3) { animation-delay: 0.95s; }
+
+@keyframes steam-rise {
+  0% { stroke-dashoffset: 1; opacity: 0; transform: translateY(3px); }
+  25% { opacity: 0.85; }
+  70% { stroke-dashoffset: 0; opacity: 0.45; }
+  100% { stroke-dashoffset: 0; opacity: 0; transform: translateY(-9px); }
+}
+
+/* -----------------------------------------------------------------------------
+   Scroll progress
+
+   A hairline that fills as the page scrolls, driven entirely by the compositor
+   via a scroll-progress timeline — no scroll listener, no JavaScript, no work
+   on the main thread. Gated behind @supports and hidden by default, so browsers
+   without scroll-driven animations get nothing rather than a broken bar that
+   never moves.
+   -------------------------------------------------------------------------- */
+.scroll-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 55;
+    height: 2px;
+    background: linear-gradient(90deg, var(--caramel), var(--caramel-2));
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    animation: progress-grow linear forwards;
+    animation-timeline: scroll(root block);
+  }
+
+  @keyframes progress-grow {
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Reveal on scroll
+
+   Same idea: a view-progress timeline lets elements fade and rise as they enter,
+   with zero JavaScript. Without support the element is simply visible, which is
+   the correct fallback — content must never depend on an animation running.
+   -------------------------------------------------------------------------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 26%;
+    }
+
+    @keyframes reveal-in {
+      from {
+        opacity: 0;
+        transform: translateY(26px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+}
+
+/* Respect the platform reduced-motion setting: kill transitions, parallax and
+   smooth scrolling rather than merely shortening them. */
 @media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer base {
-  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; letter-spacing: -0.02em; }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Jost", "Plus Jakarta Sans", sans-serif;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+  /* Anchored sections clear the fixed header. */
+  :target {
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
 }

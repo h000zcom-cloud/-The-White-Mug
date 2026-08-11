@@ -1,5 +1,13 @@
 import { motion } from "framer-motion";
-import { img } from "@/lib/images";
+import { Coffee, Wheat, Leaf, Wifi } from "lucide-react";
+import Picture from "@/components/media/Picture";
+
+const PILLARS = [
+  { title: "Artisanal Coffee Bar", sub: "Pour-over rituals · espresso classics", Icon: Coffee },
+  { title: "Fresh Sourdough", sub: "Baked in-house every morning", Icon: Wheat },
+  { title: "100% Pure Veg", sub: "Clean, thoughtful vegetarian menu", Icon: Leaf },
+  { title: "Work & Chill", sub: "Fast Wi-Fi · warm seating", Icon: Wifi },
+];
 
 const TILES = [
   { key: "hero_interior", caption: "Warm interior seating & wooden tables", span: "row-span-2" },
@@ -45,11 +53,13 @@ export default function AmbianceGallery() {
               transition={{ duration: 0.7, delay: i * 0.06, ease: [0.2, 0.7, 0.2, 1] }}
               className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-borderwarm bg-cream2 ${t.span}`}
             >
-              <img
-                src={img(t.key)}
+              <Picture
+                slug={t.key}
                 alt={t.caption}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-[900ms] group-hover:scale-105"
+                aspect="auto"
+                sizes="(min-width: 640px) 25vw, 50vw"
+                className="absolute inset-0 h-full w-full"
+                imgClassName="transition-transform duration-700 ease-brand group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-espresso/70 via-espresso/0 to-transparent" />
               <figcaption className="absolute bottom-3 left-3 right-3 text-cream text-[11.5px] sm:text-[13px] leading-tight">
@@ -59,22 +69,25 @@ export default function AmbianceGallery() {
           ))}
         </div>
 
-        {/* Pillars strip */}
-        <div className="mt-8 sm:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {[
-            { t: "Artisanal Coffee Bar", s: "Pour-over rituals · Espresso classics", e: "☕" },
-            { t: "Fresh Sourdough", s: "Baked in-house every morning", e: "🥑" },
-            { t: "100% Pure Veg", s: "Clean, thoughtful vegetarian menu", e: "🌿" },
-            { t: "Work & Chill", s: "Fast Wi-Fi · Warm seating", e: "💻" },
-          ].map((p) => (
+        {/*
+          Pillars. These used emoji, which render as a different picture on every
+          operating system and undercut an otherwise controlled palette. Line
+          icons match the logo's weight and inherit brand colour.
+        */}
+        <div className="mt-8 grid grid-cols-2 gap-2.5 sm:mt-12 sm:gap-4 lg:grid-cols-4">
+          {PILLARS.map((p) => (
             <div
-              key={p.t}
-              className="rounded-2xl border border-borderwarm bg-white p-4 flex items-start gap-3"
+              key={p.title}
+              className="group flex items-start gap-3 rounded-2xl border border-borderwarm bg-white p-3.5 transition-[border-color,box-shadow] duration-300 hover:border-espresso/20 hover:shadow-lift sm:p-4"
             >
-              <span className="text-2xl leading-none" aria-hidden="true">{p.e}</span>
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-cream2 text-espresso transition-colors duration-300 group-hover:bg-caramel/15 group-hover:text-caramel">
+                <p.Icon aria-hidden="true" className="h-4 w-4" strokeWidth={1.7} />
+              </span>
               <div className="min-w-0">
-                <div className="font-serif-display text-espresso text-[17px] sm:text-[19px] leading-tight tracking-tight">{p.t}</div>
-                <div className="text-mutedwarm text-[12px] mt-1">{p.s}</div>
+                <div className="text-[14.5px] font-semibold leading-tight text-espresso sm:text-[15.5px]">
+                  {p.title}
+                </div>
+                <div className="mt-1 text-[12px] leading-snug text-mutedwarm">{p.sub}</div>
               </div>
             </div>
           ))}

@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { MapPin, Phone, Clock, Instagram, ExternalLink, Navigation } from "lucide-react";
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { TID } from "@/lib/testIds";
 import { ReserveCtx } from "@/lib/reserve-context";
+import useCafeStatus from "@/hooks/useCafeStatus";
 
 const NAV_LINK =
   "https://www.google.com/maps/dir/?api=1&destination=20.0063999,73.7546168";
@@ -10,35 +11,9 @@ const PLACE_LINK = "https://www.google.com/maps/place/20.0063999,73.7546168";
 const MAP_EMBED =
   "https://www.google.com/maps?q=20.0063999,73.7546168&hl=en&z=17&output=embed";
 
-// Compute open/close status in IST regardless of client timezone.
-function useLiveStatus() {
-  const [state, setState] = useState({ open: true, label: "Open Now until 11:00 PM" });
-
-  useEffect(() => {
-    const tick = () => {
-      const now = new Date();
-      const ist = new Date(
-        now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
-      );
-      const mins = ist.getHours() * 60 + ist.getMinutes();
-      const open = 9 * 60 + 30; // 9:30
-      const close = 23 * 60; // 23:00
-      const isOpen = mins >= open && mins < close;
-      setState({
-        open: isOpen,
-        label: isOpen ? "Open Now until 11:00 PM" : "Closed · Opens 9:30 AM",
-      });
-    };
-    tick();
-    const t = setInterval(tick, 60_000);
-    return () => clearInterval(t);
-  }, []);
-
-  return state;
-}
-
 export default function Location() {
-  const status = useLiveStatus();
+  // Shared with the nav pill, so the two can never disagree.
+  const status = useCafeStatus();
   const openReserve = useContext(ReserveCtx);
 
   return (

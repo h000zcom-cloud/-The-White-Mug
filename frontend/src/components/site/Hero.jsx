@@ -3,12 +3,13 @@ import { useRef } from "react";
 import { ArrowDown, MapPin, Star, Leaf, Clock } from "lucide-react";
 import { TID } from "@/lib/testIds";
 import { scrollToId } from "@/hooks/useLenis";
-import { img } from "@/lib/images";
+import Picture from "@/components/media/Picture";
+import { Steam } from "@/components/brand/Logo";
 
 const NAV_LINK =
   "https://www.google.com/maps/dir/?api=1&destination=20.0063999,73.7546168";
 
-const LINE_1 = "Specially Coffee House";
+const LINE_1 = "Specialty Coffee House";
 const LINE_2 = "& Your Favorite";
 const LINE_3 = "Third Space.";
 
@@ -73,10 +74,11 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05, duration: 0.6 }}
-            className="flex items-center gap-3 mb-5 sm:mb-8"
+            className="mb-5 flex items-center gap-3 sm:mb-8"
           >
-            <span className="w-6 sm:w-8 h-px bg-espresso/40" />
+            <span aria-hidden="true" className="h-px w-6 bg-espresso/40 sm:w-8" />
             <span className="eyebrow !text-[10px] sm:!text-[11px]">Est. Nashik · Since Day One</span>
+            <Steam className="h-4 w-8 text-caramel/70" />
           </motion.div>
 
           <motion.h1
@@ -162,11 +164,13 @@ export default function Hero() {
             transition={{ delay: 0.5, duration: 1, ease: [0.2, 0.7, 0.2, 1] }}
             className="absolute top-0 right-0 w-[64%] aspect-[3/4] clip-frame-tall bg-cream2"
           >
-            <img
-              src={img("spanish_latte")}
-              alt="Spanish latte in a tall glass"
-              className="w-full h-full object-cover"
-              loading="eager"
+            <Picture
+              slug="spanish_latte"
+              alt="A Spanish latte in a tall glass, layered espresso and condensed milk"
+              aspect="auto"
+              priority
+              sizes="(min-width: 1024px) 375px, 60vw"
+              className="h-full w-full"
             />
             <div className="absolute bottom-3 left-3 right-3 bg-white/85 backdrop-blur-md rounded-2xl p-2.5 flex items-center justify-between border border-borderwarm">
               <div>
@@ -186,10 +190,13 @@ export default function Hero() {
             transition={{ delay: 0.7, duration: 1 }}
             className="absolute bottom-14 left-0 w-[52%] aspect-[4/5] clip-frame"
           >
-            <img
-              src={img("sourdough_toast")}
-              alt="Fresh sourdough open toast"
-              className="w-full h-full object-cover"
+            <Picture
+              slug="sourdough_toast"
+              alt="Sourdough open toast topped with fresh vegetables and melted cheese"
+              aspect="auto"
+              priority
+              sizes="(min-width: 1024px) 305px, 50vw"
+              className="h-full w-full"
             />
           </motion.div>
 
@@ -200,10 +207,12 @@ export default function Hero() {
             transition={{ delay: 0.9, duration: 1 }}
             className="absolute bottom-0 right-4 w-[36%] aspect-square clip-frame"
           >
-            <img
-              src={img("croissant")}
-              alt="Golden butter croissant"
-              className="w-full h-full object-cover"
+            <Picture
+              slug="croissant"
+              alt="A golden, flaky all-butter croissant"
+              aspect="auto"
+              sizes="(min-width: 1024px) 210px, 35vw"
+              className="h-full w-full"
             />
           </motion.div>
 

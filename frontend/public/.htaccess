@@ -1,0 +1,143 @@
+# ============================================================================
+# The White Mug — Apache config for shared hosting (cPanel, Hostinger, etc.)
+#
+# This file is copied into build/ automatically. Upload it alongside index.html
+# into your public_html (or the subfolder you're serving from).
+#
+# It does four jobs. The first is not optional — without it, /menu returns 404.
+# ============================================================================
+
+
+# ----------------------------------------------------------------------------
+# 1. Single-page app routing
+#
+# /menu is resolved by JavaScript in the browser; there is no menu folder on
+# disk. Apache must serve index.html for any path that isn't a real file, and
+# let the router take it from there. Without this rule, opening thewhitemug.com/menu
+# directly — or refreshing while on it — gives a 404.
+# ----------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # If serving from a subfolder, change this to /subfolder/ and set
+  # "homepage": "/subfolder/" in package.json before building.
+  RewriteBase /
+
+  # Never rewrite requests for files or directories that actually exist,
+  # otherwise the JS, CSS and images would all be served index.html.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else goes to the app shell.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+
+# ----------------------------------------------------------------------------
+# 2. Media types
+#
+# Most shared hosts run an Apache build old enough that it doesn't know AVIF.
+# Without this the browser receives application/octet-stream and refuses to
+# render the images — which looks exactly like the images being broken.
+# ----------------------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType image/avif                     .avif
+  AddType image/webp                     .webp
+  AddType image/svg+xml                  .svg
+  AddType application/manifest+json      .webmanifest
+  AddType font/woff2                     .woff2
+</IfModule>
+
+
+# ----------------------------------------------------------------------------
+# 3. Compression
+#
+# Images are already compressed, so only text is worth deflating. The JS bundle
+# drops from roughly 520 KB to 162 KB, which on a phone is the difference
+# between a snappy load and a slow one.
+# ----------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/ld+json
+  AddOutputFilterByType DEFLATE image/svg+xml application/manifest+json
+</IfModule>
+
+# Brotli, if the host has it. Smaller again than deflate.
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/plain text/xml
+  AddOutputFilterByType BROTLI_COMPRESS application/javascript application/json
+  AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+</IfModule>
+
+
+# ----------------------------------------------------------------------------
+# 4. Caching
+#
+# The build gives every asset a content hash in its filename (main.04d97a73.js),
+# so those files can be cached effectively forever — a new deploy produces new
+# filenames. index.html must NOT be cached, because it's the file that points at
+# the current hashes; cache it and returning visitors get last week's site.
+# ----------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                              "access plus 1 month"
+
+  ExpiresByType text/css                      "access plus 1 year"
+  ExpiresByType application/javascript        "access plus 1 year"
+  ExpiresByType image/avif                    "access plus 1 year"
+  ExpiresByType image/webp                    "access plus 1 year"
+  ExpiresByType image/jpeg                    "access plus 1 year"
+  ExpiresByType image/png                     "access plus 1 year"
+  ExpiresByType image/svg+xml                 "access plus 1 year"
+  ExpiresByType font/woff2                    "access plus 1 year"
+
+  ExpiresByType text/html                     "access plus 0 seconds"
+  ExpiresByType application/manifest+json     "access plus 1 week"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Hashed assets: immutable tells the browser not to even revalidate.
+  <FilesMatch "\.[0-9a-f]{8,}\.(js|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Derived images are content-addressed by slug + width, so equally safe.
+  <FilesMatch "\.(avif|webp|jpg|jpeg|png|svg|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # The shell must always be revalidated.
+  <FilesMatch "index\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Modest hardening. No CSP here — it needs to be written against whatever
+  # analytics or embeds you end up adding, and a wrong CSP breaks the site
+  # silently, so it's better added deliberately than guessed at.
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header always unset X-Powered-By
+</IfModule>
+
+
+# ----------------------------------------------------------------------------
+# Housekeeping
+# ----------------------------------------------------------------------------
+
+# Don't expose folder contents if index.html is ever missing.
+Options -Indexes
+
+# Serve UTF-8 by default so ₹ and curly quotes render correctly.
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+  # Force HTTPS. Comment out if your certificate isn't installed yet, or the
+  # site will redirect-loop into an unreachable https URL.
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
