@@ -1,46 +1,42 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { MessageCircle, X } from "lucide-react";
+import { MugMark } from "@/components/brand/Logo";
 
 const AGENT_ID = process.env.REACT_APP_ELEVENLABS_AGENT_ID;
 const WIDGET_SRC = "https://unpkg.com/@elevenlabs/convai-widget-embed";
 
 /**
- * ElevenLabs conversational agent widget.
+ * ElevenLabs chat agent, behind our own launcher.
  *
- * Opt-in: renders nothing unless REACT_APP_ELEVENLABS_AGENT_ID is set. Three
- * reasons it works this way.
+ * The widget's stock launcher is a pale card that vanished against the cream
+ * background, and because it renders inside shadow DOM there is no way to
+ * restyle it from here. So we use the documented custom-trigger pattern: keep
+ * the widget mounted but visually out of the way, present our own button, and
+ * call `startConversation()` on it.
  *
- * Privacy. This loads and runs third-party JavaScript from a CDN. That should be
- * a deliberate decision, not something that ships because it was left switched
- * on. (The scaffolding this project came with had exactly that problem —
- * analytics with session recording, enabled by default.)
+ * The host is hidden with opacity and pointer-events rather than `display: none`
+ * — a display-none custom element can't lay out its own panel, so the chat would
+ * have nowhere to open. This way it is fully rendered, just invisible until a
+ * conversation begins.
  *
- * Performance. The widget is a few hundred kilobytes the site does not otherwise
- * need. It loads only once the browser is idle, so it can never delay the hero
- * image or first paint, and a visitor who leaves in two seconds never downloads
- * it at all.
+ * If `startConversation` is ever missing (the widget's API changing under us),
+ * `fallback` reveals the stock launcher instead of leaving a dead button.
  *
- * Cost. ElevenLabs bills per conversation. Being able to switch this off with an
- * environment variable, without a code change, means you can pull it instantly
- * if usage runs away.
- *
- * ## Why this cannot affect the site's design
- *
- * The widget renders inside its own shadow DOM. Styles do not cross that
- * boundary in either direction: the widget cannot inherit or override any of the
- * site's CSS, and the site's Tailwind classes cannot reach inside it. The only
- * surface it shares with the page is the fixed wrapper below — one positioned
- * div, out of the document flow, so it cannot shift or resize a single existing
- * element.
+ * Still opt-in: renders nothing unless REACT_APP_ELEVENLABS_AGENT_ID is set, so
+ * no third-party script is fetched and no conversation minutes can be spent.
  */
 export default function ChatAgent() {
-  const [ready, setReady] = useState(false);
+  const [scriptReady, setScriptReady] = useState(false);
+  const [active, setActive] = useState(false);
+  const [fallback, setFallback] = useState(false);
+  const hostRef = useRef(null);
 
+  // ---- load the widget script once the browser is idle ---------------------
   useEffect(() => {
     if (!AGENT_ID) return;
 
-    // Already injected by a previous mount.
     if (document.querySelector(`script[src="${WIDGET_SRC}"]`)) {
-      setReady(true);
+      setScriptReady(true);
       return;
     }
 
@@ -52,9 +48,8 @@ export default function ChatAgent() {
       script.src = WIDGET_SRC;
       script.async = true;
       script.type = "text/javascript";
-      script.onload = () => !cancelled && setReady(true);
+      script.onload = () => !cancelled && setScriptReady(true);
       script.onerror = () => {
-        // The site is fully usable without it, so fail quietly.
         if (process.env.NODE_ENV !== "production") {
           console.warn("[ChatAgent] widget script failed to load");
         }
@@ -62,7 +57,6 @@ export default function ChatAgent() {
       document.body.appendChild(script);
     };
 
-    // Wait for idle so this can't compete with anything that matters.
     if ("requestIdleCallback" in window) {
       const id = window.requestIdleCallback(load, { timeout: 4000 });
       return () => {
@@ -70,7 +64,6 @@ export default function ChatAgent() {
         window.cancelIdleCallback?.(id);
       };
     }
-
     const t = setTimeout(load, 2500);
     return () => {
       cancelled = true;
@@ -78,34 +71,109 @@ export default function ChatAgent() {
     };
   }, []);
 
-  if (!AGENT_ID || !ready) return null;
+  // ---- track conversation state so the launcher gets out of the way --------
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el || !scriptReady) return;
+
+    const start = () => setActive(true);
+    const end = () => setActive(false);
+
+    el.addEventListener("conversationStarted", start);
+    el.addEventListener("conversationEnded", end);
+    return () => {
+      el.removeEventListener("conversationStarted", start);
+      el.removeEventListener("conversationEnded", end);
+    };
+  }, [scriptReady]);
+
+  const open = useCallback(() => {
+    const el = hostRef.current;
+    if (el && typeof el.startConversation === "function") {
+      setActive(true);
+      el.startConversation();
+      return;
+    }
+    // API not available: show the widget's own launcher rather than nothing.
+    setFallback(true);
+    setActive(true);
+  }, []);
+
+  const close = useCallback(() => {
+    const el = hostRef.current;
+    if (el && typeof el.endConversation === "function") el.endConversation();
+    setActive(false);
+  }, []);
+
+  if (!AGENT_ID) return null;
+
+  const showHost = active || fallback;
 
   return (
-    /*
-     * z-998 keeps the launcher below the nav drawer (1000) and the reservation
-     * dialog (1070), so it can never sit on top of the site's own UI.
-     */
     <div
       data-testid="chat-agent"
-      className="tw-agent fixed right-3 z-[998] lg:right-5"
-      style={{ bottom: "calc(var(--dock-h) + env(safe-area-inset-bottom, 0px) + 14px)" }}
+      className="tw-agent pointer-events-none fixed inset-0 z-[998]"
+      aria-live="polite"
     >
-      <elevenlabs-convai
-        agent-id={AGENT_ID}
-        /* Compact is the small launcher; expanded opens the panel immediately. */
-        variant="compact"
-        /* Let the visitor put it away. Off by default in the widget. */
-        dismissible="true"
-        /* Drops the "Powered by ElevenLabs" strip under the launcher. */
-        disable-banner="true"
-        /* Brand the orb with the cafe mark instead of the ElevenLabs logo. */
-        avatar-image-url="/icon-192.png"
-        avatar-orb-color-1="#C1873F"
-        avatar-orb-color-2="#E8D3B4"
-        action-text="Ask about the menu"
-        expand-text="Open"
-        collapse-text="Close"
-      />
+      {/* The widget itself. Invisible and inert until a conversation starts. */}
+      <div
+        className={
+          showHost
+            ? "tw-agent__host tw-agent__host--on pointer-events-auto"
+            : "tw-agent__host pointer-events-none"
+        }
+      >
+        {/* eslint-disable-next-line react/no-unknown-property */}
+        <elevenlabs-convai
+          ref={hostRef}
+          agent-id={AGENT_ID}
+          variant="expanded"
+          disable-banner="true"
+          avatar-orb-color-1="#C1873F"
+          avatar-orb-color-2="#F0DFC2"
+          action-text="Ask about the menu"
+          start-call-text="Start chat"
+          end-call-text="End chat"
+          expand-text="Open"
+          collapse-text="Close"
+        />
+      </div>
+
+      {/* Our launcher */}
+      {scriptReady && !active && (
+        <div className="tw-agent__launcher pointer-events-auto">
+          <span aria-hidden="true" className="tw-agent__halo" />
+          <button
+            type="button"
+            onClick={open}
+            data-testid="chat-agent-open"
+            aria-label="Ask about the menu"
+            className="tw-agent__btn group"
+          >
+            <MugMark
+              strokeWidth={5}
+              className="tw-agent__mark h-[26px] w-[26px] text-cream transition-transform duration-500 ease-brand group-hover:-translate-y-px"
+            />
+            <MessageCircle aria-hidden="true" className="tw-agent__chat h-[15px] w-[15px]" />
+          </button>
+          <span className="tw-agent__label" aria-hidden="true">
+            Ask about the menu
+          </span>
+        </div>
+      )}
+
+      {/* Close affordance while the panel is open, in case the widget's own is
+          hard to find on a small screen. */}
+      {active && !fallback && (
+        <button
+          type="button"
+          onClick={close}
+          aria-label="Close chat"
+          className="tw-agent__close pointer-events-auto"
+        >
+          <X aria-hidden="true" className="h-4 w-4" />
+        </button>
+      )}
     </div>
   );
 }

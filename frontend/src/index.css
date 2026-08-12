@@ -440,27 +440,214 @@ body {
 /* -----------------------------------------------------------------------------
    Chat launcher
 
-   The widget renders in shadow DOM, so its internals can't be styled from here.
-   It does expose two custom properties for the panel size, and the host element
-   can be transformed — which is the only way to bring the launcher down to a
-   size that suits a cafe site rather than a support desk.
+   The widget's own launcher is a pale card that disappeared against the cream
+   page, and it lives in shadow DOM so it can't be restyled. We hide it and
+   present our own button instead — dark, gold-ringed, and readable over any
+   background the visitor happens to have scrolled to.
    -------------------------------------------------------------------------- */
-.tw-agent elevenlabs-convai {
-  /* Panel size once opened. Default is larger than this page needs. */
-  --elevenlabs-convai-widget-width: 360px;
-  --elevenlabs-convai-widget-height: 520px;
 
-  /* Scale the closed launcher down. Anchored bottom-right so it shrinks toward
-     the corner rather than drifting away from it. */
-  transform: scale(0.86);
-  transform-origin: bottom right;
+/* The widget host: fully rendered but invisible until a chat begins, so its
+   panel can still lay itself out. `display: none` would break that. */
+.tw-agent__host {
+  position: fixed;
+  right: 12px;
+  bottom: calc(var(--dock-h) + env(safe-area-inset-bottom, 0px) + 14px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.28s ease;
+  --elevenlabs-convai-widget-width: 370px;
+  --elevenlabs-convai-widget-height: 540px;
+}
+.tw-agent__host--on {
+  opacity: 1;
+  visibility: visible;
 }
 
+@media (min-width: 1024px) {
+  .tw-agent__host {
+    right: 20px;
+  }
+}
 @media (max-width: 640px) {
-  .tw-agent elevenlabs-convai {
-    --elevenlabs-convai-widget-width: calc(100vw - 24px);
-    --elevenlabs-convai-widget-height: 70dvh;
-    transform: scale(0.82);
+  .tw-agent__host {
+    left: 12px;
+    right: 12px;
+    --elevenlabs-convai-widget-width: 100%;
+    --elevenlabs-convai-widget-height: 72dvh;
+  }
+}
+
+/* ---- our launcher ---- */
+.tw-agent__launcher {
+  position: fixed;
+  right: 14px;
+  bottom: calc(var(--dock-h) + env(safe-area-inset-bottom, 0px) + 16px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: agent-in 0.6s cubic-bezier(0.22, 0.75, 0.18, 1) both;
+}
+@media (min-width: 1024px) {
+  .tw-agent__launcher {
+    right: 22px;
+  }
+}
+
+@keyframes agent-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.tw-agent__btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  /* Espresso body with a warm top-light, so it reads as a lit object rather
+     than a flat black dot. */
+  background:
+    radial-gradient(120% 100% at 30% 15%, #3a322b 0%, #191714 55%),
+    #191714;
+  /* Gold rim. Two shadows: a hairline ring for definition on any background,
+     and a soft warm glow so it never merges into white. */
+  box-shadow:
+    0 0 0 1px rgba(193, 135, 63, 0.55),
+    0 0 0 5px rgba(193, 135, 63, 0.12),
+    0 12px 28px -10px rgba(25, 23, 20, 0.5);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 0.75, 0.18, 1),
+    box-shadow 0.35s ease;
+}
+.tw-agent__btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(217, 164, 78, 0.85),
+    0 0 0 7px rgba(193, 135, 63, 0.18),
+    0 18px 36px -12px rgba(25, 23, 20, 0.55);
+}
+.tw-agent__btn:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* Small chat glyph tucked at the corner, so the purpose is obvious even though
+   the mark is the cafe's own. */
+.tw-agent__chat {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  padding: 2px;
+  border-radius: 999px;
+  background: var(--caramel);
+  color: var(--espresso);
+}
+
+/* Breathing gold halo. Two staggered rings, slow enough to read as "alive"
+   rather than an alarm. Purely decorative. */
+.tw-agent__halo,
+.tw-agent__halo::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: 1px solid rgba(193, 135, 63, 0.5);
+  pointer-events: none;
+  animation: agent-halo 3.6s cubic-bezier(0.16, 0.84, 0.24, 1) infinite;
+}
+.tw-agent__halo::after {
+  content: "";
+  right: -1px;
+  bottom: -1px;
+  animation-delay: 1.3s;
+}
+
+@keyframes agent-halo {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.75);
+    opacity: 0;
+  }
+}
+
+/* Desktop hover label. Hidden from assistive tech; the button is labelled. */
+.tw-agent__label {
+  display: none;
+  order: -1;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--espresso);
+  color: var(--cream);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(8px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 0.75, 0.18, 1);
+  box-shadow: 0 10px 24px -12px rgba(25, 23, 20, 0.5);
+}
+@media (min-width: 1024px) {
+  .tw-agent__label {
+    display: block;
+  }
+  .tw-agent__launcher:hover .tw-agent__label {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.tw-agent__close {
+  position: fixed;
+  right: 14px;
+  bottom: calc(var(--dock-h) + env(safe-area-inset-bottom, 0px) + 16px);
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(193, 135, 63, 0.5);
+  background: var(--espresso);
+  color: var(--cream);
+  box-shadow: 0 10px 24px -12px rgba(25, 23, 20, 0.55);
+}
+@media (min-width: 1024px) {
+  .tw-agent__close {
+    right: 22px;
+  }
+}
+@media (max-width: 640px) {
+  /* On a phone the panel fills the width, so park the close control above it. */
+  .tw-agent__close {
+    bottom: auto;
+    top: calc(var(--header-h) + 12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tw-agent__halo,
+  .tw-agent__halo::after,
+  .tw-agent__launcher {
+    animation: none;
+  }
+  .tw-agent__halo,
+  .tw-agent__halo::after {
+    opacity: 0.35;
   }
 }
 

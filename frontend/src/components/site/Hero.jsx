@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDown, MapPin, Star, Leaf, Clock } from "lucide-react";
 import { TID } from "@/lib/testIds";
 import { scrollToId } from "@/hooks/useLenis";
@@ -44,10 +44,28 @@ function Line({ text, startDelay = 0, italic = false }) {
 export default function Hero() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const yA = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const yB = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const yC = useTransform(scrollYProgress, [0, 1], [0, -180]);
-  const yBg = useTransform(scrollYProgress, [0, 1], [0, 120]);
+
+  /*
+   * Parallax is desktop-only.
+   *
+   * Below lg the three photographs sit in a plain grid rather than stacked
+   * absolutely, so sliding them vertically would just pull them out of
+   * alignment with each other. The offsets collapse to zero and the layout
+   * stays still.
+   */
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setIsDesktop(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  const yA = useTransform(scrollYProgress, [0, 1], [0, isDesktop ? -120 : 0]);
+  const yB = useTransform(scrollYProgress, [0, 1], [0, isDesktop ? -60 : 0]);
+  const yC = useTransform(scrollYProgress, [0, 1], [0, isDesktop ? -180 : 0]);
+  const yBg = useTransform(scrollYProgress, [0, 1], [0, isDesktop ? 120 : 0]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.25]);
 
   return (
@@ -60,9 +78,14 @@ export default function Hero() {
       <motion.div
         style={{ y: yBg, opacity }}
         aria-hidden="true"
-        className="pointer-events-none absolute -top-4 sm:-top-8 left-0 right-0 flex justify-center"
+        /*
+         * Hidden below lg. On a phone the headline already fills the width, so
+         * the watermark sat directly behind the type and read as a smudge rather
+         * than a texture.
+         */
+        className="pointer-events-none absolute -top-6 left-0 right-0 hidden justify-center lg:flex"
       >
-        <span className="font-serif-display italic text-[26vw] sm:text-[22vw] leading-none text-espresso/[0.04] select-none">
+        <span className="select-none font-serif-display text-[22vw] italic leading-none text-espresso/[0.035]">
           coffee
         </span>
       </motion.div>
@@ -132,31 +155,42 @@ export default function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.45, duration: 0.7 }}
-            className="mt-6 sm:mt-10 flex flex-wrap items-center gap-3"
+            /* Full width and equal on a phone, so the pair reads as a
+               deliberate block rather than two differently sized pills. */
+            className="mt-7 flex flex-col gap-2.5 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3"
           >
             <button
               data-testid={TID.heroCtaMenu}
               onClick={() => scrollToId("menu")}
-              className="btn-glow inline-flex items-center gap-2 min-h-[48px] px-6 py-3 rounded-full bg-espresso text-cream text-[14px] font-medium hover:bg-espresso2 transition-colors"
+              className="btn-glow inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-espresso px-6 text-[14.5px] font-medium text-cream transition-colors hover:bg-espresso2 sm:min-h-[48px] sm:w-auto"
             >
               Explore Digital Menu
-              <ArrowDown className="w-4 h-4" />
+              <ArrowDown className="h-4 w-4" />
             </button>
             <a
               data-testid={TID.heroCtaDirections}
               href={NAV_LINK}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 min-h-[48px] px-6 py-3 rounded-full border border-espresso/20 text-espresso hover:border-espresso hover:bg-white transition-colors text-[14px] font-medium"
+              className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-espresso/20 bg-white/60 px-6 text-[14.5px] font-medium text-espresso transition-colors hover:border-espresso hover:bg-white sm:min-h-[48px] sm:w-auto sm:bg-transparent"
             >
-              <MapPin className="w-4 h-4" />
+              <MapPin className="h-4 w-4" />
               Get Directions
             </a>
           </motion.div>
         </div>
 
-        {/* Right: parallax gallery */}
-        <div className="col-span-12 lg:col-span-5 relative h-[460px] sm:h-[560px] lg:h-[700px] mt-4 lg:mt-0">
+        {/*
+          Gallery.
+          
+          Below lg this is a plain two-column grid: the arched signature shot
+          across the top, then the toast and croissant side by side. Previously
+          all three were absolutely positioned inside a 460px box at every size,
+          which on a phone meant they overlapped by more than half and read as a
+          layout fault. From lg the absolute stack returns, where there is
+          genuinely room for it to look composed.
+        */}
+        <div className="relative col-span-12 mt-7 grid grid-cols-2 gap-2.5 sm:gap-4 lg:col-span-5 lg:mt-0 lg:block lg:h-[700px]">
           <motion.div
             style={{ y: yA }}
             initial={{ opacity: 0, scale: 0.94 }}
@@ -172,7 +206,7 @@ export default function Hero() {
              * card sits. The hero product shot and its price should be in front
              * regardless; the others tucking behind is what reads as depth.
              */
-            className="absolute top-0 right-0 z-20 w-[64%] aspect-[3/4] clip-frame-tall bg-cream2"
+            className="clip-frame-tall relative col-span-2 aspect-[4/5] bg-cream2 sm:aspect-[16/11] lg:absolute lg:right-0 lg:top-0 lg:z-20 lg:aspect-[3/4] lg:w-[64%]"
           >
             <Picture
               slug="spanish_latte"
@@ -198,7 +232,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 1 }}
-            className="absolute bottom-14 left-0 w-[52%] aspect-[4/5] clip-frame"
+            className="clip-frame aspect-square lg:absolute lg:bottom-14 lg:left-0 lg:aspect-[4/5] lg:w-[52%]"
           >
             <Picture
               slug="sourdough_toast"
@@ -215,7 +249,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 1 }}
-            className="absolute bottom-0 right-4 w-[36%] aspect-square clip-frame"
+            className="clip-frame aspect-square lg:absolute lg:bottom-0 lg:right-4 lg:w-[36%]"
           >
             <Picture
               slug="croissant"
@@ -230,8 +264,12 @@ export default function Hero() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.4, duration: 0.7 }}
-            /* z-30 keeps this above the arched frame, which is now z-20. */
-            className="absolute top-6 -left-2 z-30 hidden w-[180px] rounded-2xl border border-borderwarm bg-white/90 p-4 shadow-[0_20px_50px_-25px_rgba(31,22,20,0.25)] backdrop-blur-md sm:block"
+            /*
+             * z-30 keeps this above the arched frame, which is z-20. Only from
+             * lg: below that the gallery is a grid, so an absolutely positioned
+             * card would float over the photographs instead of beside them.
+             */
+            className="absolute -left-2 top-6 z-30 hidden w-[180px] rounded-2xl border border-borderwarm bg-white/90 p-4 shadow-[0_20px_50px_-25px_rgba(31,22,20,0.25)] backdrop-blur-md lg:block"
           >
             <div className="text-[10px] uppercase tracking-[0.28em] text-mutedwarm">Signature</div>
             <div className="font-serif-display text-espresso text-2xl leading-tight mt-1">

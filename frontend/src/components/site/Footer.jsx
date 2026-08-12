@@ -3,6 +3,7 @@ import { Instagram, Shield } from "lucide-react";
 import { TID } from "@/lib/testIds";
 import { DrawOnViewMark } from "@/components/brand/Logo";
 import VegMark from "@/components/brand/VegMark";
+import WaveDivider from "@/components/site/WaveDivider";
 
 const LINKS = [
   { to: "/menu", label: "Full Menu" },
@@ -16,7 +17,7 @@ export default function Footer() {
   return (
     <footer
       data-testid={TID.footer}
-      className="on-ink relative overflow-hidden bg-espresso pt-14 text-cream sm:pt-20"
+      className="on-ink relative overflow-hidden bg-espresso pt-24 text-cream sm:pt-32 lg:pt-40"
       /*
        * The footer absorbs the mobile dock's clearance, so the dark background
        * runs all the way behind it. Putting this padding on an unstyled wrapper
@@ -24,6 +25,9 @@ export default function Footer() {
        */
       style={{ paddingBottom: "calc(var(--dock-h) + 2.25rem)" }}
     >
+      {/* Cream pours down into the dark footer. */}
+      <WaveDivider from="var(--cream)" />
+
       <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-caramel/10 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -left-16 w-96 h-96 rounded-full bg-caramel/10 blur-3xl pointer-events-none" />
 

@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, Quote, ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { REVIEWS } from "@/data/menu";
+import WaveDivider from "@/components/site/WaveDivider";
 import { TID } from "@/lib/testIds";
 
 export default function Reviews() {
@@ -19,8 +20,11 @@ export default function Reviews() {
     <section
       id="reviews"
       data-testid={TID.reviews}
-      className="relative py-14 sm:py-20 lg:py-32 bg-[#F7F1E8] overflow-hidden"
+      className="relative overflow-hidden bg-[#F7F1E8] pb-14 pt-20 sm:pb-20 sm:pt-28 lg:pb-32 lg:pt-40"
     >
+      {/* Poured edge from the cream ambiance section above. */}
+      <WaveDivider from="var(--cream)" />
+
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center gap-3 mb-4">
           <span className="w-8 h-px bg-espresso/40" />
