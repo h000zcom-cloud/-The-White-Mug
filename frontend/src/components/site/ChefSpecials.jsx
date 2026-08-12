@@ -65,8 +65,18 @@ export default function ChefSpecials() {
           </p>
         </div>
 
-        {/* Mobile: horizontal snap-scroll carousel · Desktop: 4-column grid */}
-        <div className="-mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0 flex lg:grid lg:grid-cols-4 gap-3 lg:gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar lg:overflow-visible pb-2 lg:pb-0">
+        {/*
+          Mobile: horizontal snap-scroll carousel · Desktop: 4-column grid
+
+          `scroll-pl-*` matters and is easy to lose. The row goes full-bleed with
+          `-mx-4` and restores the inset with `px-4`, but `snap-mandatory` snaps a
+          card's edge to the *scrollport* edge, and the scrollport is the padding
+          box — so the browser scrolled straight past that 16px of padding and
+          parked the first card flush against the screen edge. `scroll-padding`
+          insets the snapport itself, so every snap position now lands 16px in
+          and the first card gets the same breathing room as the gap between cards.
+        */}
+        <div className="-mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0 scroll-pl-4 sm:scroll-pl-6 lg:scroll-pl-0 flex lg:grid lg:grid-cols-4 gap-3 lg:gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar lg:overflow-visible pb-2 lg:pb-0">
           {SPECIALS.map((s, i) => (
             <motion.article
               key={s.name}
