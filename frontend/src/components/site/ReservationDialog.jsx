@@ -90,16 +90,26 @@ export default function ReservationDialog({ open, onClose, prefillItem }) {
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
             /*
-             * Centred with a translate rather than `inset-x` + `mx-auto`.
-             * Setting left and right together with a max-width over-constrains
-             * the box, and combined with the intrinsic minimum width of the
-             * date/time inputs the panel ended up wider than the viewport and
-             * pannable sideways. This version can never exceed the screen.
+             * Centred with `inset-x-0` + `mx-auto`, NOT with `left-1/2` and
+             * `-translate-x-1/2`.
+             *
+             * This is the important part: framer-motion animates `y` and
+             * `scale`, and it writes those as an *inline* `transform` style.
+             * An inline style beats a class, so motion's transform silently
+             * replaced Tailwind's `-translate-x-1/2` entirely. The panel kept
+             * `left: 50%` with no correction, so its left edge sat at the
+             * middle of the screen and the whole dialog hung off the right.
+             *
+             * With a definite width and `margin-inline: auto` the box centres
+             * through layout instead of through a transform, so motion is free
+             * to own `transform` without fighting it. The sideways-pan bug this
+             * replaced was actually caused by `min-width: auto` on the grid
+             * children, which `min-w-0` on `inputCls` and `Field` fixes.
              *
              * `dvh` not `vh`: on mobile, `vh` ignores the browser's own chrome,
-             * so a 92vh panel gets its bottom cut off.
+             * so a 90vh panel gets its bottom cut off.
              */
-            className="fixed bottom-3 left-1/2 z-[1071] flex max-h-[90dvh] w-[calc(100%-1.5rem)] max-w-[540px] -translate-x-1/2 flex-col overflow-hidden rounded-[28px] border border-borderwarm bg-cream shadow-[0_40px_80px_-30px_rgba(31,22,20,0.5)] sm:bottom-auto sm:top-[6vh] sm:w-[calc(100%-2rem)]"
+            className="fixed inset-x-0 bottom-3 z-[1071] mx-auto flex max-h-[90dvh] w-[calc(100%-2rem)] max-w-[540px] flex-col overflow-hidden rounded-[28px] border border-borderwarm bg-cream shadow-[0_40px_80px_-30px_rgba(31,22,20,0.5)] sm:bottom-auto sm:top-[6vh]"
           >
             <div className="overflow-y-auto overflow-x-hidden overscroll-contain p-5 sm:p-8">
               <div className="flex items-start justify-between gap-4">

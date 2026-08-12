@@ -1,0 +1,40 @@
+You are taking over a live React marketing website for a real cafe called The White Mug
+(a specialty coffee house and 100% pure vegetarian cafe in Nashik, Maharashtra, India).
+It is already built, already working, and already deployed at https://the-white-mug.vercel.app
+My job for you is a DESIGN OVERHAUL, not a rewrite.
+
+STEP 1 - Read the brief before you write any code.
+There is a file at the root of this repository called AI-DESIGN-BRIEF.md
+Open it and read all 13 sections in full. It is your complete instruction set.
+It tells you what the site is, how the repo is laid out, what to change,
+and - most importantly - section 7 lists ten bugs that have ALREADY been shipped
+and fixed on this codebase. If you reintroduce one of those, you have made the
+site worse than you found it. Read section 7 twice.
+
+STEP 2 - Confirm before you build.
+Reply with a short plan: which of the 12 work items in section 9 you will do,
+in what order, and anything in the brief you think is contradictory or wrong.
+Do not start coding until you have given me that plan.
+
+STEP 3 - Then implement.
+Work through section 9 in order. Section 9.1 (menu photography) is my highest
+priority. Section 11 is the definition of done - do not tell me you are finished
+until you can state the result of each row in that table.
+
+The three rules that matter most to me:
+
+1. DO NOT OVERDO IT. Restraint is a requirement, not a preference. If the brief
+   leaves you a choice, take the quieter option. Do not add sections, pages,
+   animations or dependencies the brief does not ask for.
+
+2. IT MUST WORK ON A PHONE. I test on a real device at 430px wide and I find bugs
+   myself. The site must never scroll sideways at any width from 320px to 2560px.
+
+3. BE HONEST IN YOUR REPORT. If you could not verify something - a Lighthouse
+   score, a real device, an image you could not generate - say so plainly instead
+   of implying it passed. An incomplete report is fine. An inaccurate one is not.
+
+First impression is the last impression on this one. I am showing this website to
+the cafe owner and I want us both to be proud of it.
+
+Start by reading AI-DESIGN-BRIEF.md and giving me your plan.
