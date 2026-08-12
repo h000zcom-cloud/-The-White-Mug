@@ -20,14 +20,19 @@ import { useEffect } from "react";
  */
 
 /**
- * Long enough for the sequence to land: the mark finishes drawing at ~1.8s, the
- * coffee finishes rising at ~2.5s, and the location line is arriving. Cutting
- * before the cup fills wastes the one moment of colour in the whole screen.
+ * Long enough for the whole sequence to land.
+ *
+ * Timeline: the mark finishes drawing at ~1.8s, the coffee finishes rising at
+ * ~2.5s, the ripples fire at 2.25s and 2.45s, and the location line finishes
+ * fading in at ~2.8s. A 2.5s floor cut the ending off on a fast connection, so
+ * the sequence looked inconsistent — sometimes complete, sometimes clipped.
+ *
+ * 3.3s lets every beat finish, including the ripple, before the exit begins.
  */
-const MIN_VISIBLE_MS = 2500;
+const MIN_VISIBLE_MS = 3300;
 
 /** Hard ceiling regardless of what's still in flight. */
-const MAX_VISIBLE_MS = 6000;
+const MAX_VISIBLE_MS = 6500;
 
 /** Matches the tw-wipe exit duration in index.html. */
 const EXIT_MS = 820;

@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import "@/App.css";
 import Nav from "@/components/site/Nav";
 import Footer from "@/components/site/Footer";
 import ReservationDialog from "@/components/site/ReservationDialog";
-import MobileDock from "@/components/site/MobileDock";
 import ChatAgent from "@/components/site/ChatAgent";
 import HomePage from "@/pages/HomePage";
 import MenuPage from "@/pages/MenuPage";
@@ -14,7 +12,6 @@ import { ReserveCtx } from "@/lib/reserve-context";
 import { Toaster } from "@/components/ui/sonner";
 import useOpeningSequence from "@/hooks/useOpeningSequence";
 import useSmoothScroll from "@/hooks/useSmoothScroll";
-import { pageTransition } from "@/lib/motion";
 
 /**
  * Restores expected browser behaviour across route changes: a new page starts at
@@ -52,39 +49,29 @@ function ScrollManager() {
 }
 
 /**
- * Cross-fades between routes so navigating to the menu feels like one continuous
- * surface rather than a document reload.
+ * Routes.
  *
- * `mode="wait"` lets the outgoing page finish before the incoming one starts,
- * which avoids the two pages briefly overlapping and doubling the page height.
- * The exit is kept to 200ms — any longer and navigation feels sluggish, which is
- * the opposite of what a transition is for.
+ * This used to be wrapped in `AnimatePresence mode="wait"` with an opacity/y
+ * page transition. It caused a blank page: the outgoing route would unmount but
+ * the incoming one could stay stuck at its `initial` state of opacity 0, so
+ * every in-flow element was present but invisible — leaving only the fixed
+ * header and dock on screen. Clicking the logo reproduced it reliably.
+ *
+ * A 340ms crossfade is not worth a route that sometimes renders nothing, so the
+ * transition is now a plain CSS fade keyed on the path. It cannot get stuck: if
+ * the animation never runs, the content is simply already visible.
  */
 function AnimatedRoutes() {
   const location = useLocation();
-  const reduced = useReducedMotion();
-
-  const routes = (
-    <Routes location={location}>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/menu" element={<MenuPage />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
-  );
-
-  if (reduced) return routes;
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={location.pathname}
-        initial={pageTransition.initial}
-        animate={pageTransition.animate}
-        exit={pageTransition.exit}
-      >
-        {routes}
-      </motion.div>
-    </AnimatePresence>
+    <div key={location.pathname} className="route-fade">
+      <Routes location={location}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </div>
   );
 }
 
@@ -127,7 +114,6 @@ export default function App() {
           <Footer />
         </div>
 
-        <MobileDock onReserveClick={() => openReserve()} />
         <ReservationDialog open={reserve.open} onClose={closeReserve} prefillItem={reserve.item} />
         <ChatAgent />
         <Toaster />

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="The White Mug">
+  <title>The White Mug</title>
+  <!--
+    Favicon built from the shopfront mark: half-round cup, ring handle on the
+    left, stem running down through the rim, leaf to the right, saucer beneath.
+
+    Stroke weight is deliberately heavier than the site logo (5 vs 4.5 on the
+    same 100-unit grid). At 32px the sign-accurate hairline renders below one
+    device pixel and disappears; a favicon has to survive being tiny.
+  -->
+  <rect width="100" height="100" rx="22" fill="#FBFAF8" />
+  <g fill="none" stroke="#191714" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 47h64" />
+    <path d="M24 47a26 26 0 0 0 52 0" />
+    <path d="M21 55.5a6 6 0 1 0-12 0 6 6 0 1 0 12 0" />
+    <path d="M50 17v56" />
+    <path d="M50 42c4.6-12 13-19.4 21.3-22.2-1.9 9.3-9.3 18.5-21.3 22.2Z" fill="#47694E" fill-opacity="0.92" stroke="#191714" />
+    <path d="M26 86h48" />
+  </g>
+</svg>

@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, Menu as MenuIcon, X, ArrowUpRight } from "lucide-react";
+import {
+  Phone,
+  Menu as MenuIcon,
+  X,
+  ArrowUpRight,
+  UtensilsCrossed,
+  MapPin,
+} from "lucide-react";
 import Logo from "@/components/brand/Logo";
 import VegMark from "@/components/brand/VegMark";
 import useCafeStatus from "@/hooks/useCafeStatus";
@@ -15,8 +22,26 @@ const PHONE = "+919561166185";
  * Real URLs, so every item is a genuine link — middle-click, open-in-new-tab and
  * crawlers all work, none of which is true of a button that calls scrollTo.
  */
+const MAP_LINK = "https://www.google.com/maps/dir/?api=1&destination=20.0063999,73.7546168";
+
+/** Desktop nav. Menu is a primary destination here, so it keeps its place. */
 const LINKS = [
   { to: "/menu", label: "Menu" },
+  { to: "/#story", label: "Our Story" },
+  { to: "/#quiz", label: "Find My Brew" },
+  { to: "/#reviews", label: "Reviews" },
+  { to: "/#location", label: "Visit" },
+];
+
+/**
+ * Mobile drawer links.
+ *
+ * Menu moves out of this list and into the action buttons below, so the slot is
+ * given to Home — without it there was no explicit way back to the top of the
+ * site from a sub-page, only the logo, which not everyone reads as a link.
+ */
+const DRAWER_LINKS = [
+  { to: "/", label: "Home" },
   { to: "/#story", label: "Our Story" },
   { to: "/#quiz", label: "Find My Brew" },
   { to: "/#reviews", label: "Reviews" },
@@ -296,7 +321,7 @@ export default function Nav({ onReserveClick }) {
               className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-5 pt-3"
               style={{ paddingBottom: "max(20px, env(safe-area-inset-bottom))" }}
             >
-              {LINKS.map((l, i) => (
+              {DRAWER_LINKS.map((l, i) => (
                 <motion.div
                   key={l.to}
                   initial={{ opacity: 0, y: 12 }}
@@ -326,7 +351,29 @@ export default function Nav({ onReserveClick }) {
               >
                 <StatusPill status={status} />
 
+                {/*
+                  The four actions that used to sit in the fixed bottom dock.
+                  Moved here so the bottom of the screen is free — the dock was
+                  colliding with the chat launcher, and it duplicated navigation
+                  that already existed one tap away.
+                */}
                 <div className="mt-3 grid grid-cols-2 gap-2.5">
+                  <Link
+                    to="/menu"
+                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-espresso/20 bg-white text-[14px] font-medium text-espresso"
+                  >
+                    <UtensilsCrossed aria-hidden="true" className="h-4 w-4" />
+                    Menu
+                  </Link>
+                  <a
+                    href={MAP_LINK}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-espresso/20 bg-white text-[14px] font-medium text-espresso"
+                  >
+                    <MapPin aria-hidden="true" className="h-4 w-4" />
+                    Directions
+                  </a>
                   <a
                     href={`tel:${PHONE}`}
                     className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-espresso/20 bg-white text-[14px] font-medium text-espresso"

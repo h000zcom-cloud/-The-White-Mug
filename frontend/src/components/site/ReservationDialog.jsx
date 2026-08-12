@@ -89,9 +89,19 @@ export default function ReservationDialog({ open, onClose, prefillItem }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
-            className="fixed z-[1071] inset-x-3 sm:inset-x-4 bottom-3 sm:bottom-auto sm:top-[6vh] sm:mx-auto max-w-[540px] max-h-[92vh] overflow-y-auto bg-cream border border-borderwarm rounded-[28px] shadow-[0_40px_80px_-30px_rgba(31,22,20,0.5)]"
+            /*
+             * Centred with a translate rather than `inset-x` + `mx-auto`.
+             * Setting left and right together with a max-width over-constrains
+             * the box, and combined with the intrinsic minimum width of the
+             * date/time inputs the panel ended up wider than the viewport and
+             * pannable sideways. This version can never exceed the screen.
+             *
+             * `dvh` not `vh`: on mobile, `vh` ignores the browser's own chrome,
+             * so a 92vh panel gets its bottom cut off.
+             */
+            className="fixed bottom-3 left-1/2 z-[1071] flex max-h-[90dvh] w-[calc(100%-1.5rem)] max-w-[540px] -translate-x-1/2 flex-col overflow-hidden rounded-[28px] border border-borderwarm bg-cream shadow-[0_40px_80px_-30px_rgba(31,22,20,0.5)] sm:bottom-auto sm:top-[6vh] sm:w-[calc(100%-2rem)]"
           >
-            <div className="p-6 sm:p-8">
+            <div className="overflow-y-auto overflow-x-hidden overscroll-contain p-5 sm:p-8">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <div className="eyebrow">Reservation · WhatsApp</div>
@@ -120,7 +130,7 @@ export default function ReservationDialog({ open, onClose, prefillItem }) {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="mt-5 grid grid-cols-2 gap-3">
+              <form onSubmit={handleSubmit} className="mt-5 grid w-full grid-cols-2 gap-x-3 gap-y-3.5">
                 <Field label="Name" className="col-span-2">
                   <input
                     data-testid={TID.reserveName}
@@ -214,13 +224,24 @@ export default function ReservationDialog({ open, onClose, prefillItem }) {
   );
 }
 
+/**
+ * `min-w-0` is the important one.
+ *
+ * Native date, time and select controls carry a large intrinsic minimum width —
+ * on Android Chrome a date input refuses to render below roughly 140px. Grid and
+ * flex children default to `min-width: auto`, which means "never shrink below
+ * your content's minimum", so the two-column row could not fit and pushed the
+ * whole dialog wider than the screen. That is what made the form pan sideways.
+ */
 const inputCls =
-  "mt-1 w-full h-11 min-h-[44px] px-4 rounded-xl border border-borderwarm bg-white outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30 text-[14px]";
+  "mt-1 h-11 min-h-[44px] w-full min-w-0 max-w-full rounded-xl border border-borderwarm bg-white px-3.5 text-[14px] outline-none focus:border-espresso/40 focus:ring-2 focus:ring-caramel/30";
 
 function Field({ label, children, className = "" }) {
   return (
-    <label className={`block ${className}`}>
-      <span className="text-[11px] uppercase tracking-[0.28em] text-mutedwarm">{label}</span>
+    <label className={`block min-w-0 ${className}`}>
+      <span className="block truncate text-[11px] uppercase tracking-[0.22em] text-mutedwarm">
+        {label}
+      </span>
       {children}
     </label>
   );

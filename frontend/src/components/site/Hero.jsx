@@ -162,7 +162,17 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 1, ease: [0.2, 0.7, 0.2, 1] }}
-            className="absolute top-0 right-0 w-[64%] aspect-[3/4] clip-frame-tall bg-cream2"
+            /*
+             * z-20 puts the arched frame above the sourdough tile.
+             *
+             * These three photos are absolutely positioned siblings, so paint
+             * order followed DOM order — and the sourdough, coming later,
+             * covered the left half of this frame's price card. They overlap
+             * between 36% and 52% of the column, which is exactly where the
+             * card sits. The hero product shot and its price should be in front
+             * regardless; the others tucking behind is what reads as depth.
+             */
+            className="absolute top-0 right-0 z-20 w-[64%] aspect-[3/4] clip-frame-tall bg-cream2"
           >
             <Picture
               slug="spanish_latte"
@@ -220,7 +230,8 @@ export default function Hero() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.4, duration: 0.7 }}
-            className="hidden sm:block absolute top-6 -left-2 bg-white/90 backdrop-blur-md border border-borderwarm rounded-2xl p-4 shadow-[0_20px_50px_-25px_rgba(31,22,20,0.25)] w-[180px]"
+            /* z-30 keeps this above the arched frame, which is now z-20. */
+            className="absolute top-6 -left-2 z-30 hidden w-[180px] rounded-2xl border border-borderwarm bg-white/90 p-4 shadow-[0_20px_50px_-25px_rgba(31,22,20,0.25)] backdrop-blur-md sm:block"
           >
             <div className="text-[10px] uppercase tracking-[0.28em] text-mutedwarm">Signature</div>
             <div className="font-serif-display text-espresso text-2xl leading-tight mt-1">

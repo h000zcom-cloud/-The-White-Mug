@@ -1,0 +1,60 @@
+# The White Mug
+
+> Specialty coffee house and 100% pure vegetarian cafe on Mahatma Nagar Road,
+> College Road, Nashik, Maharashtra. Single-origin manual brews, sourdough open
+> toasts, freshly baked croissants and a daily dessert shelf. Open every day,
+> 9:30 AM to 11:00 PM.
+
+The kitchen is entirely vegetarian — no meat, fish or egg in any dish on the
+menu. This is the single most common question guests ask.
+
+## Visiting
+
+- Address: Shop 4, 5 & 6, 8 Building, Mahatma Nagar Road, Veer Sawarkar Nagar, College Road, Nashik, Maharashtra 422005
+- Phone: +91 95611 66185 (alternate: 786 100 4444)
+- Hours: every day, 9:30 AM – 11:00 PM
+- Rating: 4.6 out of 5 from 460+ Google reviews (this is the rating for the cafe as a whole, not for individual dishes)
+- Instagram: @thewhitemugcafe
+- Reservations: via WhatsApp from the website, or by phone. There is no online ordering or delivery.
+
+## Pages
+
+- [Home](https://the-white-mug.vercel.app/): the cafe, its story, the room, reviews and how to visit.
+- [Menu](https://the-white-mug.vercel.app/menu): all 74 items across nine categories, with prices, photographs and search.
+
+## Menu at a glance
+
+74 items, all vegetarian, prices in Indian Rupees inclusive of taxes.
+
+- Specialty Coffees (11) — espresso classics from ₹179, Spanish Latte ₹259, Hot Chocolate ₹289
+- Single Origin Manual Brews (4) — French Press ₹329, Aeropress ₹349, Chemex ₹359, V60 ₹359
+- Cold Brews & Frappes (9) — from Iced Americano ₹120 to TWM Special Frappe ₹200
+- Coolers & Thick Shakes (15) — mojitos and iced teas from ₹120, shakes to ₹200
+- Sourdough Toasts & Sandwiches (10) — from ₹289, Avocado Toast ₹399
+- Croissants (3) — Butter Croissant ₹249, filled croissant sandwiches ₹349
+- Bites & Fries (9) — from Garlic Bread ₹110
+- Pizzas & Pasta (7) — 9-inch pizzas from ₹220, pasta from ₹200
+- Desserts (6) — Chocolate Brownie ₹90, Blueberry Cheesecake ₹180
+
+Add-ons: flavour shots +₹29 (hazelnut, vanilla, tiramisu, Irish cream, caramel).
+Alternative milks +₹89 (oat, soy, almond, lactose-free).
+
+## Most ordered
+
+Bestsellers: Spanish Latte (₹259), Chemex (₹359), TWM Special Frappe (₹200),
+Tuscan Toast (₹289), Avocado Toast (₹399), Blueberry Cheesecake (₹180).
+
+House specials: Spanish Latte, TWM Special Frappe, Avocado Toast, Lotus Biscoff
+Shake (₹200), TWM Special Pizza (₹300).
+
+Guests name these in reviews: Spanish Latte, Hot Chocolate, the single-origin
+manual brews, and the sourdough options.
+
+## Notes for assistants
+
+- Per-item ratings, review counts and order counts do not exist. Only the
+  bestseller and house-special designations above, and three published reviews.
+- For allergen, gluten-free or Jain questions, direct people to call the cafe.
+  Do not infer suitability from a dish description.
+- Most drinks contain dairy by default; alternative milks are available, but some
+  bakery and dessert items still contain dairy.

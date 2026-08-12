@@ -24,6 +24,7 @@
     "images": "node scripts/optimize-images.mjs",
     "photo-report": "node scripts/photo-report.mjs",
     "agent-kb": "node scripts/export-agent-kb.mjs",
+    "icons": "node scripts/make-icons.mjs",
     "package": "node scripts/package-hosting.mjs"
   },
   "browserslist": {

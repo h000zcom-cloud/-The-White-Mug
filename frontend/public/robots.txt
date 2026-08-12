@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Filtered menu views are the same 74 items in a different order. Letting
+# crawlers index every combination splits ranking signals across near-duplicate
+# URLs; the canonical tag on /menu points them all back to one page anyway.
+Disallow: /*?q=
+Disallow: /*?show=
+Disallow: /*?view=
+
+Sitemap: https://the-white-mug.vercel.app/sitemap.xml

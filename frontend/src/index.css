@@ -38,11 +38,12 @@
   --menubar-h: 106px;
 
   /*
-   * Clearance for the fixed mobile action dock. Matches the compact dock:
-   * 44px row + 12px chrome + 8px inset. Kept as a token so the footer padding
-   * and the dock's own height can't drift apart.
+   * Bottom clearance. The fixed mobile action dock was removed — its four
+   * actions now live in the nav drawer, which frees the bottom of the screen and
+   * stops it colliding with the chat launcher. Kept as a token because the footer
+   * padding and the chat launcher both key off it.
    */
-  --dock-h: 64px;
+  --dock-h: 0px;
 
   /* shadcn tokens, kept in sync with the palette above. */
   --background: 40 23% 98%;
@@ -76,7 +77,6 @@
 @media (min-width: 1024px) {
   :root {
     --header-h: 68px;
-    --dock-h: 0px;
   }
 }
 
@@ -435,6 +435,63 @@ body {
 }
 .btn-glow:hover::after {
   opacity: 1;
+}
+
+/* -----------------------------------------------------------------------------
+   Chat launcher
+
+   The widget renders in shadow DOM, so its internals can't be styled from here.
+   It does expose two custom properties for the panel size, and the host element
+   can be transformed — which is the only way to bring the launcher down to a
+   size that suits a cafe site rather than a support desk.
+   -------------------------------------------------------------------------- */
+.tw-agent elevenlabs-convai {
+  /* Panel size once opened. Default is larger than this page needs. */
+  --elevenlabs-convai-widget-width: 360px;
+  --elevenlabs-convai-widget-height: 520px;
+
+  /* Scale the closed launcher down. Anchored bottom-right so it shrinks toward
+     the corner rather than drifting away from it. */
+  transform: scale(0.86);
+  transform-origin: bottom right;
+}
+
+@media (max-width: 640px) {
+  .tw-agent elevenlabs-convai {
+    --elevenlabs-convai-widget-width: calc(100vw - 24px);
+    --elevenlabs-convai-widget-height: 70dvh;
+    transform: scale(0.82);
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Route change fade
+
+   Replaces a framer-motion page transition that could leave a route stuck at
+   opacity 0, rendering a blank page. A CSS animation cannot fail that way: if it
+   never runs, the element keeps its normal appearance. `backwards` fill is
+   deliberately NOT used, so there is no state in which content is hidden while
+   waiting to animate.
+   -------------------------------------------------------------------------- */
+.route-fade {
+  animation: route-fade-in 0.34s cubic-bezier(0.22, 0.75, 0.18, 1);
+}
+
+@keyframes route-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-fade {
+    animation: none;
+  }
 }
 
 /* -----------------------------------------------------------------------------

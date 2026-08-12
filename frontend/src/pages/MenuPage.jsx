@@ -20,6 +20,7 @@ import MenuItemSheet from "@/components/menu/MenuItemSheet";
 import { Steam } from "@/components/brand/Logo";
 import Reveal, { RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import useActiveSection from "@/hooks/useActiveSection";
+import useDocumentMeta from "@/hooks/useDocumentMeta";
 import { ReserveCtx } from "@/lib/reserve-context";
 import { BRAND_EASE } from "@/lib/motion";
 import { TID } from "@/lib/testIds";
@@ -46,6 +47,12 @@ function useDebounced(value, delay = 200) {
 export default function MenuPage() {
   const [params, setParams] = useSearchParams();
   const openReserve = useContext(ReserveCtx);
+
+  useDocumentMeta({
+    title: `Menu · ${MENU.length} Items with Prices — The White Mug, Nashik`,
+    description: `Full menu for The White Mug, Nashik: ${MENU.length} vegetarian items with prices and photographs. Specialty coffees from ₹179, single-origin manual brews, sourdough toasts, croissants, pizzas and desserts. Open daily 9:30 AM to 11:00 PM.`,
+    path: "/menu",
+  });
 
   const query = params.get("q") ?? "";
   const filter = params.get("show") ?? "all";

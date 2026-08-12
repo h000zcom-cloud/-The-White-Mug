@@ -82,17 +82,30 @@ export default function ChatAgent() {
 
   return (
     /*
-     * z-998 sits below the mobile dock (999) and the nav drawer (1000), so the
-     * launcher can never cover the site's own navigation. Lifted clear of the
-     * dock on phones via --dock-h, and of the safe-area inset on notched
-     * devices.
+     * z-998 keeps the launcher below the nav drawer (1000) and the reservation
+     * dialog (1070), so it can never sit on top of the site's own UI.
      */
     <div
       data-testid="chat-agent"
-      className="fixed right-3 z-[998] lg:right-5"
-      style={{ bottom: "calc(var(--dock-h) + env(safe-area-inset-bottom, 0px) + 12px)" }}
+      className="tw-agent fixed right-3 z-[998] lg:right-5"
+      style={{ bottom: "calc(var(--dock-h) + env(safe-area-inset-bottom, 0px) + 14px)" }}
     >
-      <elevenlabs-convai agent-id={AGENT_ID} />
+      <elevenlabs-convai
+        agent-id={AGENT_ID}
+        /* Compact is the small launcher; expanded opens the panel immediately. */
+        variant="compact"
+        /* Let the visitor put it away. Off by default in the widget. */
+        dismissible="true"
+        /* Drops the "Powered by ElevenLabs" strip under the launcher. */
+        disable-banner="true"
+        /* Brand the orb with the cafe mark instead of the ElevenLabs logo. */
+        avatar-image-url="/icon-192.png"
+        avatar-orb-color-1="#C1873F"
+        avatar-orb-color-2="#E8D3B4"
+        action-text="Ask about the menu"
+        expand-text="Open"
+        collapse-text="Close"
+      />
     </div>
   );
 }
